@@ -7,1209 +7,1076 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HoH Milli">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0f1923">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f1923'/><text y='.9em' font-size='80' x='10'>🏋️</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:#0f1923;--navy2:#1a2744;--blue:#1e3a6e;
-  --accent:#e8a838;--accent2:#ff6b35;--green:#2ecc71;
-  --red:#e74c3c;--teal:#00b4d8;--pink:#e91e8c;
-  --text:#f0f4ff;--muted:#8899bb;
-  --card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--radius:14px;
+:root{
+  --navy:#0f1923;--navy2:#1a2744;--accent:#e8a838;--green:#2ecc71;
+  --red:#e74c3c;--teal:#00b4d8;--pink:#e91e8c;--purple:#9c6fff;
+  --text:#f0f4ff;--muted:#8899bb;--card:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--radius:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;}
+html,body{height:100%;background:var(--navy);color:var(--text);font-family:"DM Sans",sans-serif;overflow:hidden;}
 .screen{display:none;flex-direction:column;height:100vh;overflow:hidden;}
 .screen.active{display:flex;}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;flex-shrink:0;background:linear-gradient(180deg,rgba(15,25,35,1) 0%,rgba(15,25,35,0) 100%);}
-.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);}
+.topbar-title{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);}
 .topbar-sub{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
 .back-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:18px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .scroll{flex:1;overflow-y:auto;padding:0 16px 100px;-webkit-overflow-scrolling:touch;}
 .scroll::-webkit-scrollbar{display:none;}
-.bottomnav{display:flex;background:var(--navy2);border-top:1px solid var(--border);flex-shrink:0;padding:8px 0 calc(8px + env(safe-area-inset-bottom));}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;font-size:10px;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;transition:color 0.2s;}
-.nav-btn .nav-icon{font-size:20px;}
-.nav-btn.active{color:var(--accent);}
+.bnav{display:flex;background:var(--navy2);border-top:1px solid var(--border);flex-shrink:0;padding:8px 0 calc(8px + env(safe-area-inset-bottom));}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;font-size:10px;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;}
+.nb .ni{font-size:20px;}
+.nb.active{color:var(--accent);}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
-.home-hero{background:linear-gradient(135deg,var(--navy2) 0%,#0d2137 100%);border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1px solid var(--border);position:relative;overflow:hidden;}
-.home-hero::before{content:'HoH';position:absolute;right:-10px;top:-20px;font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(255,255,255,0.03);letter-spacing:-4px;line-height:1;}
-.hero-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
-.hero-date{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--accent);}
-.session-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.session-chip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all 0.2s;text-align:center;}
-.session-chip:active{transform:scale(0.96);}
-.session-chip-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;}
-.session-chip-athletes{font-size:11px;color:var(--muted);margin-top:3px;}
-.session-chip-type{font-size:10px;margin-top:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-.quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
-.stat-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;}
-.stat-num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--accent);}
-.stat-label{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
-.athlete-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
-.athlete-card:active{transform:scale(0.98);}
-.athlete-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;flex-shrink:0;border:2px solid;}
-.athlete-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;}
-.athlete-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.hero{background:linear-gradient(135deg,var(--navy2) 0%,#0d2137 100%);border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::before{content:"HoH";position:absolute;right:-10px;top:-20px;font-family:"Bebas Neue",sans-serif;font-size:120px;color:rgba(255,255,255,0.03);letter-spacing:-4px;line-height:1;}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.sc:active{transform:scale(0.96);}
+.sc-label{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:2px;}
+.sc-ath{font-size:11px;color:var(--muted);margin-top:3px;}
+.sc-type{font-size:10px;margin-top:6px;font-weight:600;text-transform:uppercase;}
+.qs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;}
+.qn{font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:600;color:var(--accent);}
+.ql{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+.ath-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.ath-card:active{transform:scale(0.98);}
+.avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:22px;flex-shrink:0;border:2px solid;}
 .tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.08);}
-
-/* ── ATHLETE SWITCHER (key new feature) ── */
-.athlete-switcher{display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
-.switcher-btn{flex:1;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;border-right:1px solid var(--border);}
-.switcher-btn:last-child{border-right:none;}
-.switcher-btn.active-athlete{color:var(--navy);font-weight:700;}
-.switcher-btn .switcher-sets{font-size:10px;margin-top:3px;font-family:'DM Sans',sans-serif;font-weight:400;color:var(--muted);}
-.switcher-btn.active-athlete .switcher-sets{color:var(--navy);opacity:0.7;}
-
+.switcher{display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.sw-btn{flex:1;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:1px;border-right:1px solid var(--border);}
+.sw-btn:last-child{border-right:none;}
+.sw-btn.active-a{color:var(--navy);font-weight:700;}
+.sw-sub{font-size:10px;margin-top:3px;font-family:"DM Sans",sans-serif;font-weight:400;color:var(--muted);}
+.sw-btn.active-a .sw-sub{color:var(--navy);opacity:0.7;}
 .day-toggle{display:flex;gap:8px;margin-bottom:14px;}
-.day-btn{flex:1;padding:10px;border-radius:10px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all 0.2s;}
+.day-btn{flex:1;padding:10px;border-radius:10px;text-align:center;font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all 0.2s;}
 .day-btn.active{background:var(--navy2);color:var(--text);border-color:var(--accent);}
-
 .lift-block{margin-bottom:14px;}
-.lift-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
-.lift-scheme{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.lift-name{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:1px;display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.lift-scheme{font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace;}
 .lift-pct{font-size:11px;color:var(--accent);background:rgba(232,168,56,0.1);padding:2px 8px;border-radius:20px;}
 .sets-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
 .set-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.15s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .set-box:active{transform:scale(0.94);}
 .set-box.done{border-color:var(--green);background:rgba(46,204,113,0.08);}
-.set-box.pr-set{border-color:var(--accent);background:rgba(232,168,56,0.12);}
-.set-num{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
-.set-val{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:2px;color:var(--text);}
-.section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--muted);}
-.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.set-num{font-size:9px;color:var(--muted);text-transform:uppercase;}
+.set-val{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;margin-top:2px;}
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0 14px;font-family:"Bebas Neue",sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);}
+.divider::after{content:"";flex:1;height:1px;background:var(--border);}
 .sprint-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
-.sprint-dist{font-weight:600;font-size:13px;flex:1;}
-.sprint-input{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:14px;width:80px;text-align:center;outline:none;padding:2px 4px;}
-.sprint-input::placeholder{color:var(--muted);font-size:12px;}
-.vertimax-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
-.vertimax-drill{flex:1;font-size:13px;font-weight:500;}
-.vmax-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-size:12px;border-radius:6px;padding:4px 8px;width:50px;text-align:center;outline:none;}
-.notes-area{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;padding:12px;outline:none;resize:none;min-height:80px;line-height:1.5;}
+.srinput{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:14px;width:75px;text-align:center;outline:none;padding:2px 4px;}
+.srinput::placeholder{color:var(--muted);font-size:12px;}
+.vrow{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+.vinput{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-size:12px;border-radius:6px;padding:4px 6px;width:46px;text-align:center;outline:none;}
+.notes-area{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:"DM Sans",sans-serif;padding:12px;outline:none;resize:none;min-height:80px;line-height:1.5;}
 .notes-area::placeholder{color:var(--muted);}
-
-/* Leaderboard */
-.leaderboard-section{margin-bottom:20px;}
-.lb-header{display:flex;align-items:center;gap:8px;padding:12px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.save-btn{width:100%;padding:18px;background:linear-gradient(135deg,#e8a838,#ff6b35);border:none;border-radius:14px;font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:2px;color:#0f1923;cursor:pointer;font-weight:700;}
+.lb-sec{margin-bottom:20px;}
+.lb-hdr{display:flex;align-items:center;gap:8px;padding:12px 0 8px;font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:1.5px;border-bottom:1px solid var(--border);margin-bottom:8px;}
 .lb-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:6px;}
-.lb-rank{width:28px;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);}
+.lb-rank{width:28px;font-family:"Bebas Neue",sans-serif;font-size:16px;color:var(--muted);}
 .lb-name{flex:1;font-weight:600;font-size:14px;}
-.lb-val{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;}
-.lb-row.rank-1{background:rgba(249,168,37,0.12);border:1px solid rgba(249,168,37,0.3);}
-.lb-row.rank-2{background:rgba(187,187,187,0.08);border:1px solid rgba(187,187,187,0.2);}
-.lb-row.rank-3{background:rgba(205,127,50,0.08);border:1px solid rgba(205,127,50,0.2);}
-.lb-row.rank-1 .lb-val{color:var(--accent);}
-.lb-row.rank-2 .lb-val{color:#bbb;}
-.lb-row.rank-3 .lb-val{color:#cd7f32;}
-
-/* Phase */
+.lb-val{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:15px;}
+.lb-row.r1{background:rgba(249,168,37,0.12);border:1px solid rgba(249,168,37,0.3);}
+.lb-row.r2{background:rgba(187,187,187,0.08);border:1px solid rgba(187,187,187,0.2);}
+.lb-row.r3{background:rgba(205,127,50,0.08);border:1px solid rgba(205,127,50,0.2);}
+.lb-row.r1 .lb-val{color:var(--accent);}
+.lb-row.r2 .lb-val{color:#bbb;}
+.lb-row.r3 .lb-val{color:#cd7f32;}
 .phase-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
-.phase-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;}
-.phase-sub{font-size:12px;color:var(--muted);margin-top:3px;margin-bottom:12px;}
-.phase-progress{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.phase-prog{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin:10px 0;}
 .phase-bar{height:100%;border-radius:3px;transition:width 0.8s ease;}
-.phase-weeks{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
-.week-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all 0.2s;}
-.week-dot.done{background:var(--green);border-color:var(--green);color:var(--navy);}
-.week-dot.current{border-color:var(--accent);color:var(--accent);box-shadow:0 0 10px rgba(232,168,56,0.3);}
-.week-detail{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
-.week-detail-header{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;margin-bottom:10px;}
-.week-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
-.week-row:last-child{border-bottom:none;}
-.week-row-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
-.week-row-val{font-size:13px;font-weight:600;color:var(--text);text-align:right;max-width:60%;}
-
-/* PR detail */
-.pr-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.wk-dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.wk-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:14px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;}
+.wk-dot.done{background:var(--green);border-color:var(--green);color:var(--navy);}
+.wk-dot.cur{border-color:var(--accent);color:var(--accent);box-shadow:0 0 10px rgba(232,168,56,0.3);}
+.wk-detail{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.wk-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
+.wk-row:last-child{border-bottom:none;}
+.wk-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;padding-top:2px;flex-shrink:0;}
+.wk-val{font-size:13px;font-weight:600;text-align:right;max-width:65%;}
+.pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .pr-mini{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
 .pr-mini-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
-.pr-mini-val{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;color:var(--accent);margin-top:4px;}
-.history-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
-.history-date{font-size:11px;color:var(--muted);width:65px;flex-shrink:0;}
-.history-lift{flex:1;font-size:13px;font-weight:600;}
-.history-val{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);}
-
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-.modal-overlay.show{display:flex;}
+.pr-mini-val{font-family:"JetBrains Mono",monospace;font-size:17px;font-weight:600;margin-top:4px;}
+.hist-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.modal-ov.show{display:flex;}
 .modal{background:var(--navy2);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;border-top:1px solid var(--border);animation:slideUp 0.25s ease;}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;margin-bottom:6px;}
-.modal-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
-.modal-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-.modal-input-group label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;}
-.modal-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:20px;font-family:'JetBrains Mono',monospace;text-align:center;padding:14px;outline:none;font-weight:600;transition:border-color 0.2s;}
-.modal-input:focus{border-color:var(--accent);}
-.modal-btn{width:100%;padding:16px;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;}
-.modal-btn-primary{background:var(--accent);color:var(--navy);margin-bottom:10px;}
-.modal-btn-primary:active{transform:scale(0.97);}
-.modal-btn-secondary{background:var(--card);color:var(--muted);border:1px solid var(--border);}
-
-/* Toast */
-.pr-toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f9a825,#ff6b35);color:var(--navy);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;padding:12px 24px;border-radius:30px;z-index:200;animation:toastBounce 0.4s ease;white-space:nowrap;box-shadow:0 4px 20px rgba(249,168,37,0.4);max-width:90vw;text-align:center;}
-.pr-toast.show{display:block;}
-@keyframes toastBounce{0%{transform:translateX(-50%) scale(0.8) translateY(-10px)}60%{transform:translateX(-50%) scale(1.05)}100%{transform:translateX(-50%) scale(1)}}
-
-/* Sync indicator */
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-left:6px;transition:background 0.3s;}
+.minput{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:20px;font-family:"JetBrains Mono",monospace;text-align:center;padding:14px;outline:none;font-weight:600;}
+.minput:focus{border-color:var(--accent);}
+.mbtn{width:100%;padding:16px;border:none;border-radius:12px;font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;}
+.mbtn-p{background:var(--accent);color:var(--navy);margin-bottom:10px;}
+.mbtn-s{background:var(--card);color:var(--muted);border:1px solid var(--border);}
+.toast{display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f9a825,#ff6b35);color:var(--navy);font-family:"Bebas Neue",sans-serif;font-size:15px;letter-spacing:1.5px;padding:12px 24px;border-radius:30px;z-index:200;animation:tb 0.4s ease;white-space:nowrap;box-shadow:0 4px 20px rgba(249,168,37,0.4);max-width:92vw;text-align:center;}
+.toast.show{display:block;}
+@keyframes tb{0%{transform:translateX(-50%) scale(0.8) translateY(-10px)}60%{transform:translateX(-50%) scale(1.05)}100%{transform:translateX(-50%) scale(1)}}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;transition:background 0.3s;}
 .sync-dot.syncing{background:var(--accent);animation:pulse 1s infinite;}
 .sync-dot.synced{background:var(--green);}
 .sync-dot.error{background:var(--red);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-
-/* Settings */
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
-.setting-label{font-size:14px;font-weight:600;}
-.setting-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.setting-input{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-family:'JetBrains Mono',monospace;padding:8px 10px;outline:none;width:100%;margin-top:8px;}
-.setting-input:focus{border-color:var(--accent);}
-.btn-save{background:var(--accent);color:var(--navy);border:none;border-radius:8px;padding:10px 20px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;margin-top:8px;}
-.btn-danger{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.3);border-radius:8px;padding:10px 20px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;}
+.si{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-family:"JetBrains Mono",monospace;padding:8px 10px;outline:none;width:100%;margin-top:8px;}
+.si:focus{border-color:var(--accent);}
+.sbtn{background:var(--accent);color:var(--navy);border:none;border-radius:8px;padding:10px 20px;font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;margin-top:8px;}
+.dbtn{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.3);border-radius:8px;padding:10px 20px;font-family:"Bebas Neue",sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;}
+/* sprint rep grid */
+.rep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;}
+.rep-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 4px;text-align:center;}
+.rep-box input{background:transparent;border:none;border-bottom:1px solid var(--border);font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;width:100%;text-align:center;outline:none;padding:3px 0;margin-top:4px;}
+.prescription-box{border-radius:10px;padding:12px 14px;margin-bottom:14px;}
 </style>
 </head>
 <body>
 
-<!-- ══ HOME ══ -->
-<div class="screen active" id="screen-home">
+<!-- HOME -->
+<div class="screen active" id="s-home">
   <div class="topbar">
     <div><div class="topbar-title">House of Hustle</div><div class="topbar-sub">Coach Milli</div></div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span id="sync-indicator" class="sync-dot" title="Sync status"></span>
-      <div style="cursor:pointer;font-size:22px;" onclick="navTo('screen-settings')">⚙️</div>
+      <span id="sync-dot" class="sync-dot" title="Sync"></span>
+      <div style="cursor:pointer;font-size:22px;" onclick="go('s-settings')">⚙️</div>
     </div>
   </div>
   <div class="scroll">
-    <div class="home-hero">
-      <div class="hero-label">Today</div>
-      <div class="hero-date" id="home-date">—</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:2px;" id="home-day">—</div>
+    <div class="hero">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Today</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--accent);" id="h-date"></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:2px;" id="h-day"></div>
     </div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">START A SESSION</div>
-    <div class="session-cards">
-      <div class="session-chip" style="border-color:rgba(233,30,140,0.3)" onclick="startSession('A')">
-        <div class="session-chip-label" style="color:var(--pink)">Session A</div>
-        <div class="session-chip-athletes">Xavier + Gabby</div>
-        <div class="session-chip-type" style="color:var(--pink)">🏃 In-Season</div>
+    <div class="sc-grid">
+      <div class="sc" style="border-color:rgba(233,30,140,0.3)" onclick="startSession('A')">
+        <div class="sc-label" style="color:var(--pink)">Session A</div>
+        <div class="sc-ath">Xavier + Gabby</div>
+        <div class="sc-type" style="color:var(--pink)">🏃 In-Season Track</div>
       </div>
-      <div class="session-chip" style="border-color:rgba(0,180,216,0.3)" onclick="startSession('B')">
-        <div class="session-chip-label" style="color:var(--teal)">Session B</div>
-        <div class="session-chip-athletes">Joey + Vera</div>
-        <div class="session-chip-type" style="color:var(--teal)">Shared</div>
+      <div class="sc" style="border-color:rgba(0,180,216,0.3)" onclick="startSession('B')">
+        <div class="sc-label" style="color:var(--teal)">Session B</div>
+        <div class="sc-ath">Joey + Vera</div>
+        <div class="sc-type" style="color:var(--teal)">💪 Strength</div>
       </div>
-      <div class="session-chip" style="border-color:rgba(156,111,255,0.3)" onclick="startSession('C')">
-        <div class="session-chip-label" style="color:#9c6fff">Session C</div>
-        <div class="session-chip-athletes">Joey (Solo)</div>
-        <div class="session-chip-type" style="color:#9c6fff">💪 Strength</div>
+      <div class="sc" style="border-color:rgba(156,111,255,0.3)" onclick="startSession('C')">
+        <div class="sc-label" style="color:var(--purple)">Session C</div>
+        <div class="sc-ath">Joey Solo</div>
+        <div class="sc-type" style="color:var(--purple)">💪 Heavy Day</div>
       </div>
-      <div class="session-chip" style="border-color:rgba(232,168,56,0.3)" onclick="navTo('screen-athletes')">
-        <div class="session-chip-label" style="color:var(--accent)">Athletes</div>
-        <div class="session-chip-athletes">View all 4</div>
-        <div class="session-chip-type" style="color:var(--accent)">PRs & History</div>
+      <div class="sc" style="border-color:rgba(232,168,56,0.3)" onclick="go('s-athletes')">
+        <div class="sc-label" style="color:var(--accent)">Athletes</div>
+        <div class="sc-ath">View all 4</div>
+        <div class="sc-type" style="color:var(--accent)">PRs &amp; History</div>
       </div>
     </div>
-    <div class="quick-stats" id="home-stats"></div>
+    <div class="qs" id="h-stats"></div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">RECENT SESSIONS</div>
-    <div id="recent-sessions"></div>
+    <div id="h-recent"></div>
   </div>
-  <div class="bottomnav">
-    <div class="nav-btn active" onclick="navTo('screen-home')"><div class="nav-icon">🏠</div>Home</div>
-    <div class="nav-btn" onclick="navTo('screen-athletes')"><div class="nav-icon">👥</div>Athletes</div>
-    <div class="nav-btn" onclick="navTo('screen-leaderboard')"><div class="nav-icon">🏆</div>Board</div>
-    <div class="nav-btn" onclick="navTo('screen-phase')"><div class="nav-icon">📅</div>Phase</div>
+  <div class="bnav">
+    <div class="nb active" onclick="go('s-home')"><div class="ni">🏠</div>Home</div>
+    <div class="nb" onclick="go('s-athletes')"><div class="ni">👥</div>Athletes</div>
+    <div class="nb" onclick="go('s-lb')"><div class="ni">🏆</div>Board</div>
+    <div class="nb" onclick="go('s-phase')"><div class="ni">📅</div>Phase</div>
   </div>
 </div>
 
-<!-- ══ ATHLETES ══ -->
-<div class="screen" id="screen-athletes">
+<!-- ATHLETES -->
+<div class="screen" id="s-athletes">
   <div class="topbar"><div><div class="topbar-title">Athletes</div><div class="topbar-sub">4 Active</div></div></div>
-  <div class="scroll" style="padding-top:8px"><div id="athlete-list"></div></div>
-  <div class="bottomnav">
-    <div class="nav-btn" onclick="navTo('screen-home')"><div class="nav-icon">🏠</div>Home</div>
-    <div class="nav-btn active" onclick="navTo('screen-athletes')"><div class="nav-icon">👥</div>Athletes</div>
-    <div class="nav-btn" onclick="navTo('screen-leaderboard')"><div class="nav-icon">🏆</div>Board</div>
-    <div class="nav-btn" onclick="navTo('screen-phase')"><div class="nav-icon">📅</div>Phase</div>
+  <div class="scroll" style="padding-top:8px"><div id="ath-list"></div></div>
+  <div class="bnav">
+    <div class="nb" onclick="go('s-home')"><div class="ni">🏠</div>Home</div>
+    <div class="nb active" onclick="go('s-athletes')"><div class="ni">👥</div>Athletes</div>
+    <div class="nb" onclick="go('s-lb')"><div class="ni">🏆</div>Board</div>
+    <div class="nb" onclick="go('s-phase')"><div class="ni">📅</div>Phase</div>
   </div>
 </div>
 
-<!-- ══ ATHLETE DETAIL ══ -->
-<div class="screen" id="screen-athlete-detail">
+<!-- ATHLETE DETAIL -->
+<div class="screen" id="s-ath-detail">
   <div class="topbar">
-    <div class="back-btn" onclick="navTo('screen-athletes')">←</div>
-    <div style="text-align:right"><div class="topbar-title" id="detail-name">—</div><div class="topbar-sub" id="detail-sport">—</div></div>
+    <div class="back-btn" onclick="go('s-athletes')">←</div>
+    <div style="text-align:right"><div class="topbar-title" id="d-name"></div><div class="topbar-sub" id="d-sport"></div></div>
   </div>
   <div class="scroll" style="padding-top:8px">
-    <div class="pr-mini-grid" id="detail-prs"></div>
+    <div class="pr-grid" id="d-prs"></div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">UPDATE A PR</div>
-    <div id="detail-pr-update"></div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin:14px 0 8px;">PR HISTORY</div>
-    <div id="detail-history"></div>
+    <div id="d-update"></div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin:14px 0 8px;">HISTORY</div>
+    <div id="d-hist"></div>
   </div>
 </div>
 
-<!-- ══ LEADERBOARD ══ -->
-<div class="screen" id="screen-leaderboard">
+<!-- LEADERBOARD -->
+<div class="screen" id="s-lb">
   <div class="topbar"><div><div class="topbar-title">Leaderboard</div><div class="topbar-sub">All Athletes</div></div></div>
   <div class="scroll" style="padding-top:8px" id="lb-content"></div>
-  <div class="bottomnav">
-    <div class="nav-btn" onclick="navTo('screen-home')"><div class="nav-icon">🏠</div>Home</div>
-    <div class="nav-btn" onclick="navTo('screen-athletes')"><div class="nav-icon">👥</div>Athletes</div>
-    <div class="nav-btn active" onclick="navTo('screen-leaderboard')"><div class="nav-icon">🏆</div>Board</div>
-    <div class="nav-btn" onclick="navTo('screen-phase')"><div class="nav-icon">📅</div>Phase</div>
+  <div class="bnav">
+    <div class="nb" onclick="go('s-home')"><div class="ni">🏠</div>Home</div>
+    <div class="nb" onclick="go('s-athletes')"><div class="ni">👥</div>Athletes</div>
+    <div class="nb active" onclick="go('s-lb')"><div class="ni">🏆</div>Board</div>
+    <div class="nb" onclick="go('s-phase')"><div class="ni">📅</div>Phase</div>
   </div>
 </div>
 
-<!-- ══ PHASE ══ -->
-<div class="screen" id="screen-phase">
-  <div class="topbar"><div><div class="topbar-title">Phase Plans</div><div class="topbar-sub">Progress Tracker</div></div></div>
+<!-- PHASE -->
+<div class="screen" id="s-phase">
+  <div class="topbar"><div><div class="topbar-title">Phase Plans</div><div class="topbar-sub">Auto-advancing weekly</div></div></div>
   <div class="scroll" style="padding-top:8px" id="phase-content"></div>
-  <div class="bottomnav">
-    <div class="nav-btn" onclick="navTo('screen-home')"><div class="nav-icon">🏠</div>Home</div>
-    <div class="nav-btn" onclick="navTo('screen-athletes')"><div class="nav-icon">👥</div>Athletes</div>
-    <div class="nav-btn" onclick="navTo('screen-leaderboard')"><div class="nav-icon">🏆</div>Board</div>
-    <div class="nav-btn active" onclick="navTo('screen-phase')"><div class="nav-icon">📅</div>Phase</div>
+  <div class="bnav">
+    <div class="nb" onclick="go('s-home')"><div class="ni">🏠</div>Home</div>
+    <div class="nb" onclick="go('s-athletes')"><div class="ni">👥</div>Athletes</div>
+    <div class="nb" onclick="go('s-lb')"><div class="ni">🏆</div>Board</div>
+    <div class="nb active" onclick="go('s-phase')"><div class="ni">📅</div>Phase</div>
   </div>
 </div>
 
-<!-- ══ SESSION ══ -->
-<div class="screen" id="screen-session">
+<!-- SESSION -->
+<div class="screen" id="s-session">
   <div class="topbar">
-    <div class="back-btn" onclick="confirmLeaveSession()">←</div>
-    <div style="text-align:right"><div class="topbar-title" id="session-title-bar">—</div><div class="topbar-sub" id="session-date-bar">—</div></div>
+    <div class="back-btn" onclick="leaveSession()">←</div>
+    <div style="text-align:right"><div class="topbar-title" id="sess-title"></div><div class="topbar-sub" id="sess-date"></div></div>
   </div>
-  <div class="scroll" style="padding-top:8px" id="session-content"></div>
+  <div class="scroll" style="padding-top:8px" id="sess-content"></div>
 </div>
 
-<!-- ══ EDIT SESSION ══ -->
-<div class="screen" id="screen-edit-session">
+<!-- EDIT SESSION -->
+<div class="screen" id="s-edit">
   <div class="topbar">
-    <div class="back-btn" onclick="navTo('screen-home')">←</div>
-    <div style="text-align:right"><div class="topbar-title" id="edit-session-title">Edit Session</div><div class="topbar-sub" id="edit-session-date">—</div></div>
+    <div class="back-btn" onclick="go('s-home')">←</div>
+    <div style="text-align:right"><div class="topbar-title" id="edit-title">Edit Session</div><div class="topbar-sub" id="edit-date"></div></div>
   </div>
-  <div class="scroll" style="padding-top:8px" id="edit-session-content"></div>
+  <div class="scroll" style="padding-top:8px" id="edit-content"></div>
 </div>
 
-<!-- ══ SETTINGS ══ -->
-<div class="screen" id="screen-settings">
+<!-- SETTINGS -->
+<div class="screen" id="s-settings">
   <div class="topbar">
-    <div class="back-btn" onclick="navTo('screen-home')">←</div>
-    <div><div class="topbar-title">Settings</div><div class="topbar-sub">Sync & Data</div></div>
+    <div class="back-btn" onclick="go('s-home')">←</div>
+    <div><div class="topbar-title">Settings</div><div class="topbar-sub">Sync &amp; Data</div></div>
   </div>
   <div class="scroll" style="padding-top:8px">
-
-    <div class="card" style="border-color:rgba(46,204,113,0.3);margin-bottom:16px;">
+    <div class="card" style="border-color:rgba(46,204,113,0.3);margin-bottom:12px;">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;color:#2ecc71;margin-bottom:6px;">📱 Add to iPhone Home Screen</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.8;">
-        <b style="color:var(--text);">1.</b> Open this file in <b style="color:var(--text);">Safari</b> (not Chrome)<br>
-        <b style="color:var(--text);">2.</b> Tap the <b style="color:var(--text);">Share button</b> <span style="color:#2ecc71">⬆</span> at the bottom<br>
-        <b style="color:var(--text);">3.</b> Scroll down → tap <b style="color:var(--text);">"Add to Home Screen"</b><br>
-        <b style="color:var(--text);">4.</b> Tap <b style="color:var(--text);">Add</b> — it opens fullscreen like a real app
+        <b style="color:var(--text);">1.</b> Open this file in <b style="color:var(--text);">Safari</b><br>
+        <b style="color:var(--text);">2.</b> Tap the Share button ⬆ at the bottom<br>
+        <b style="color:var(--text);">3.</b> Tap <b style="color:var(--text);">"Add to Home Screen"</b> → Add
       </div>
     </div>
-
-    <div class="card" style="border-color:rgba(232,168,56,0.3);margin-bottom:16px;">
+    <div class="card" style="border-color:rgba(232,168,56,0.3);margin-bottom:12px;">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;color:var(--accent);margin-bottom:6px;">🔗 Google Sheets Sync</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">
-        Paste your Google Apps Script Web App URL below to enable automatic sync of sessions, PRs, and phase progress to your Google Sheet.
-      </div>
-      <div id="sync-status-box" style="padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);">
-        Status: <span id="sync-status-text" style="color:var(--muted);">Not configured</span>
-      </div>
-      <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">Apps Script URL</label>
-      <input class="setting-input" id="sheets-url" placeholder="https://script.google.com/macros/s/..." type="url">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Paste your Apps Script Web App URL to sync sessions and PRs automatically.</div>
+      <div id="sync-status-box" style="padding:8px 12px;border-radius:8px;font-size:12px;margin-bottom:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);">Status: <span id="sync-status-text" style="color:var(--muted);">Not configured</span></div>
+      <label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Apps Script URL</label>
+      <input class="si" id="sheets-url" placeholder="https://script.google.com/macros/s/..." type="url">
       <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="btn-save" onclick="saveSheetURL()">SAVE & TEST</button>
-        <button class="btn-danger" onclick="clearSheetURL()">Clear</button>
+        <button class="sbtn" onclick="saveSheetURL()">SAVE &amp; TEST</button>
+        <button class="dbtn" onclick="clearSheetURL()">Clear</button>
       </div>
     </div>
-
     <div class="card" style="margin-bottom:12px;">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;margin-bottom:8px;">📋 Setup Instructions</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.8;">
-        <b style="color:var(--text);">1.</b> Go to <span style="color:var(--accent);">script.google.com</span><br>
-        <b style="color:var(--text);">2.</b> Click "New Project"<br>
-        <b style="color:var(--text);">3.</b> Delete all existing code<br>
-        <b style="color:var(--text);">4.</b> Paste the HoH Script (copy below)<br>
-        <b style="color:var(--text);">5.</b> Click Deploy → New Deployment<br>
-        <b style="color:var(--text);">6.</b> Type: Web App · Access: Anyone<br>
-        <b style="color:var(--text);">7.</b> Copy the Web App URL → paste above<br>
-        <b style="color:var(--text);">8.</b> On first run, approve permissions
+        <b style="color:var(--text);">1.</b> Open Google Sheets → create new sheet<br>
+        <b style="color:var(--text);">2.</b> Extensions → Apps Script<br>
+        <b style="color:var(--text);">3.</b> Delete all code → paste script below<br>
+        <b style="color:var(--text);">4.</b> Deploy → New Deployment → Web App<br>
+        <b style="color:var(--text);">5.</b> Execute as: Me · Access: Anyone<br>
+        <b style="color:var(--text);">6.</b> Authorize → copy URL → paste above
       </div>
     </div>
-
     <div class="card" style="margin-bottom:12px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;margin-bottom:8px;">📄 Google Apps Script Code</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Copy this entire block into your Apps Script project:</div>
-      <div style="background:rgba(0,0,0,0.4);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#aef;line-height:1.6;overflow-x:auto;white-space:pre-wrap;max-height:200px;overflow-y:auto;" id="script-code-display"></div>
-      <button class="btn-save" style="margin-top:10px;width:100%;" onclick="copyScript()">COPY SCRIPT CODE</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;margin-bottom:8px;">📄 Apps Script Code</div>
+      <div style="background:rgba(0,0,0,0.4);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#aef;line-height:1.6;max-height:180px;overflow-y:auto;white-space:pre-wrap;" id="script-display"></div>
+      <button class="sbtn" style="width:100%;margin-top:8px;" onclick="copyScript()">COPY SCRIPT</button>
     </div>
-
     <div class="card" style="margin-bottom:12px;">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;margin-bottom:8px;">💾 Local Data</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Sessions stored locally on this device: <span id="local-count" style="color:var(--accent);">0</span></div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Sessions on device: <span id="local-count" style="color:var(--accent);">0</span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn-danger" onclick="forceSyncAll()">↑ Force Sync All to Sheets</button>
-        <button class="btn-danger" onclick="clearAllSessions()">🗑 Clear All Sessions</button>
+        <button class="dbtn" onclick="forceSyncAll()">↑ Force Sync All</button>
+        <button class="dbtn" onclick="clearAll()">🗑 Clear All</button>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+<!-- MODAL -->
+<div class="modal-ov" id="modal" onclick="closeModalOv(event)">
   <div class="modal">
-    <div class="modal-title" id="modal-title">Log Set</div>
-    <div class="modal-sub" id="modal-sub">—</div>
-    <div class="modal-inputs">
-      <div class="modal-input-group"><label id="modal-label1">Weight (lbs)</label><input class="modal-input" id="modal-weight" type="number" inputmode="decimal" placeholder="0"></div>
-      <div class="modal-input-group"><label id="modal-label2">Reps</label><input class="modal-input" id="modal-reps" type="number" inputmode="numeric" placeholder="0"></div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;margin-bottom:6px;" id="m-title">Log Set</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;" id="m-sub"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div><label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;" id="m-l1">Weight</label><input class="minput" id="m-w" type="number" inputmode="decimal" placeholder="0"></div>
+      <div><label style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;" id="m-l2">Reps</label><input class="minput" id="m-r" type="number" inputmode="numeric" placeholder="0"></div>
     </div>
-    <button class="modal-btn modal-btn-primary" onclick="saveSet()">LOG SET</button>
-    <button class="modal-btn modal-btn-secondary" onclick="closeModalDirect()">Cancel</button>
+    <button class="mbtn mbtn-p" onclick="saveModal()">LOG SET</button>
+    <button class="mbtn mbtn-s" onclick="closeModal()">Cancel</button>
   </div>
 </div>
 
-<div class="pr-toast" id="pr-toast">🔥 NEW PR!</div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════════
-const ATHLETES = {
-  Xavier:{color:'#1e90ff',bg:'rgba(30,144,255,0.15)',age:13,school:'Middle School',sport:'Track & Field (Mid/Long)',session:'A',status:'IN SEASON',
-    prs:{'Bench Press':{val:55,unit:'lbs',date:'02/2026'},'Overhead Press':{val:15,unit:'lbs',date:'02/2026'},'Squat':{val:95,unit:'lbs',date:'02/2026'},'Deadlift':{val:105,unit:'lbs',date:'02/15/2026'},'Hack Squat':{val:55,unit:'lbs',date:'02/2026'},'Pull-Ups':{val:'6',unit:'reps',date:'02/2026',note:'grn→purp band'},'Mile Time':{val:'7:47',unit:'min',date:'02/2026',lower:true},'200m':{val:'30.42',unit:'sec',date:'02/24/2026',lower:true}},
-    history:[{date:'02/24/26',lift:'200m',val:'30.42 sec',note:'First meet 🏆'},{date:'02/15/26',lift:'Deadlift',val:'105 lbs',note:'NEW PR'}]},
-  Gabby:{color:'#e91e8c',bg:'rgba(233,30,140,0.15)',age:16,school:'High School',sport:'Basketball + T&F (IN SEASON)',session:'A',status:'IN SEASON',
-    prs:{'Bench Press':{val:65,unit:'lbs',date:'02/2026'},'Overhead Press':{val:15,unit:'lbs',date:'02/2026'},'Squat':{val:135,unit:'lbs',date:'02/2026'},'Deadlift':{val:90,unit:'lbs',date:'02/2026'},'Hack Squat':{val:70,unit:'lbs',date:'02/2026'},'Pull-Ups':{val:'2',unit:'reps',date:'02/2026',note:'grn band'},'Mile Time':{val:'8:41',unit:'min',date:'02/2026',lower:true}},
-    history:[]},
-  Joey:{color:'#00b4d8',bg:'rgba(0,180,216,0.15)',age:17,school:'High School',sport:'Swim & Dive (OFF SEASON)',session:'B+C',status:'OFF SEASON',
-    prs:{'Bench Press':{val:135,unit:'lbs',date:'02/2026'},'Overhead Press':{val:20,unit:'lbs',date:'02/2026'},'Squat':{val:185,unit:'lbs',date:'02/2026'},'Deadlift':{val:285,unit:'lbs',date:'02/15/2026'},'Hack Squat':{val:90,unit:'lbs',date:'02/2026'},'Pull-Ups':{val:'6',unit:'reps',date:'02/2026',note:'purp band'},'Mile Time':{val:'8:07',unit:'min',date:'02/08/2026',lower:true}},
-    history:[{date:'02/15/26',lift:'Deadlift',val:'285 lbs',note:'NEW PR 🔥'},{date:'02/08/26',lift:'Mile Time',val:'8:07',note:'Baseline'}]},
-  Vera:{color:'#2ecc71',bg:'rgba(46,204,113,0.15)',age:13,school:'Middle School',sport:'T&F — Discus Throw',session:'B',status:'DISCUS SEASON',
-    prs:{'Bench Press':{val:75,unit:'lbs',date:'02/2026'},'Overhead Press':{val:15,unit:'lbs',date:'02/2026'},'Squat':{val:95,unit:'lbs',date:'02/2026'},'Deadlift':{val:95,unit:'lbs',date:'02/2026'},'Hack Squat':{val:55,unit:'lbs',date:'02/2026'},'Pull-Ups':{val:'2',unit:'reps',date:'02/2026',note:'grn band'}},
-    history:[]}
+// ═══════════════════════════ DATA ════════════════════════════
+const ATH = {
+  Xavier:{color:"#1e90ff",bg:"rgba(30,144,255,0.12)",age:13,school:"Middle School",sport:"Track & Field — Mid/Long",sess:"A",status:"IN SEASON",
+    prs:{"Bench Press":{v:55,u:"lbs",d:"02/2026"},"Overhead Press":{v:15,u:"lbs",d:"02/2026"},"Squat":{v:95,u:"lbs",d:"02/2026"},"Deadlift":{v:105,u:"lbs",d:"02/15/26"},"Hack Squat":{v:55,u:"lbs",d:"02/2026"},"Pull-Ups":{v:6,u:"reps",d:"02/2026",note:"grn→purp band"},"Mile Time":{v:"7:47",u:"min",d:"02/2026",lo:true},"200m":{v:"30.42",u:"sec",d:"02/24/26",lo:true}},
+    hist:[{d:"02/24/26",l:"200m",v:"30.42 sec",n:"First meet 🏆"},{d:"02/15/26",l:"Deadlift",v:"105 lbs",n:"PR"}]},
+  Gabby:{color:"#e91e8c",bg:"rgba(233,30,140,0.12)",age:16,school:"High School",sport:"Basketball + T&F — IN SEASON",sess:"A",status:"IN SEASON",
+    prs:{"Bench Press":{v:65,u:"lbs",d:"02/2026"},"Overhead Press":{v:15,u:"lbs",d:"02/2026"},"Squat":{v:135,u:"lbs",d:"02/2026"},"Deadlift":{v:90,u:"lbs",d:"02/2026"},"Hack Squat":{v:70,u:"lbs",d:"02/2026"},"Pull-Ups":{v:2,u:"reps",d:"02/2026",note:"grn band"},"Mile Time":{v:"8:41",u:"min",d:"02/2026",lo:true}},
+    hist:[]},
+  Joey:{color:"#00b4d8",bg:"rgba(0,180,216,0.12)",age:17,school:"High School",sport:"Swim & Dive — OFF SEASON",sess:"B+C",status:"OFF SEASON",
+    prs:{"Bench Press":{v:135,u:"lbs",d:"02/2026"},"Overhead Press":{v:20,u:"lbs",d:"02/2026"},"Squat":{v:185,u:"lbs",d:"02/2026"},"Deadlift":{v:285,u:"lbs",d:"02/15/26"},"Hack Squat":{v:90,u:"lbs",d:"02/2026"},"Pull-Ups":{v:6,u:"reps",d:"02/2026",note:"purp band"},"Mile Time":{v:"8:07",u:"min",d:"02/08/26",lo:true}},
+    hist:[{d:"02/15/26",l:"Deadlift",v:"285 lbs",n:"PR 🔥"},{d:"02/08/26",l:"Mile Time",v:"8:07",n:"Baseline"}]},
+  Vera:{color:"#2ecc71",bg:"rgba(46,204,113,0.12)",age:13,school:"Middle School",sport:"T&F — Discus Throw",sess:"B",status:"DISCUS SEASON",
+    prs:{"Bench Press":{v:75,u:"lbs",d:"02/2026"},"Overhead Press":{v:15,u:"lbs",d:"02/2026"},"Squat":{v:95,u:"lbs",d:"02/2026"},"Deadlift":{v:95,u:"lbs",d:"02/2026"},"Hack Squat":{v:55,u:"lbs",d:"02/2026"},"Pull-Ups":{v:2,u:"reps",d:"02/2026",note:"grn band"}},
+    hist:[]}
 };
 
-const TIMED = new Set(['Mile Time','200m','100m','60m','40 Yard Dash','Mile / 1600m']);
+const TIMED = new Set(["Mile Time","200m","100m","60m","40 Yard Dash","Mile / 1600m"]);
 
-const SESSIONS_DEF = {
-  A:{label:'Session A',athletes:['Xavier','Gabby'],color:'#e91e8c',
-    day1:[{name:'Bench Press',scheme:'5x5',pct:'60-70%'},{name:'Overhead Press',scheme:'3x8',pct:'—'},{name:'Pull-Ups',scheme:'4x6',pct:'BW/Band'}],
-    day2:[{name:'Squat',scheme:'4x4',pct:'60-65%'},{name:'Deadlift',scheme:'3x4',pct:'60-65%'},{name:'Hack Squat',scheme:'3x5',pct:'—'},{name:'Bulgarian Split Squat',scheme:'3x6',pct:'ea leg'}],
-    sprints:['40 Yard Dash','60m','100m','200m','300m','400m'],
-    vmax:['Resisted Sprint 10yd','Resisted Sprint 20yd','Power Skip','Box Jump','Bounding','Broad Jump','Ankle Stiffness'],
-    hasSprint:true},
-  B:{label:'Session B',athletes:['Joey','Vera'],color:'#00b4d8',
-    day1:[{name:'Bench Press',scheme:'5x5',pct:'60-70%'},{name:'Overhead Press',scheme:'3x8',pct:'—'},{name:'Pull-Ups',scheme:'4x6',pct:'BW/Band'},{name:'DB Row',scheme:'3x10',pct:'ea arm'}],
-    day2:[{name:'Squat',scheme:'5x5',pct:'65-75%'},{name:'Deadlift',scheme:'5x4',pct:'65-75%'},{name:'Hack Squat',scheme:'3x5',pct:'—'},{name:'RDL',scheme:'3x8',pct:'—'}],
-    sprints:['40 Yard Dash','100m','200m','Mile / 1600m'],
-    vmax:['Box Jump','Power Skip','Rotational Med Ball Throw','Bounding'],
-    hasSprint:false},
-  C:{label:'Session C (Joey Solo)',athletes:['Joey'],color:'#9c6fff',
-    day1:[{name:'Bench Press',scheme:'5x5',pct:'70-80%'},{name:'Incline DB Press',scheme:'3x8',pct:'—'},{name:'Overhead Press',scheme:'3x8',pct:'—'},{name:'Pull-Ups',scheme:'4x6',pct:'Unassisted'},{name:'DB Row',scheme:'3x10',pct:'—'}],
-    day2:[{name:'Squat',scheme:'5x5',pct:'70-80%'},{name:'Deadlift',scheme:'5x4',pct:'75-85%'},{name:'Hack Squat',scheme:'4x5',pct:'—'},{name:'RDL',scheme:'3x8',pct:'—'},{name:'Leg Press',scheme:'3x10',pct:'accessory'}],
-    sprints:['Mile / 1600m'],vmax:[],hasSprint:false}
+// Session definitions
+const SESS = {
+  A:{label:"Session A",athletes:["Xavier","Gabby"],color:"#e91e8c",hasSprint:true,
+    day1:[{n:"Bench Press",s:"5x5",p:"60-70%"},{n:"Overhead Press",s:"3x8",p:"—"},{n:"Pull-Ups",s:"4x6",p:"BW/Band"}],
+    day2:[{n:"Squat",s:"4x4",p:"60-65%"},{n:"Deadlift",s:"3x4",p:"60-65%"},{n:"Hack Squat",s:"3x5",p:"—"},{n:"Bulgarian Split Squat",s:"3x6",p:"ea leg"}],
+    vmax:["Resisted Sprint 10yd","Resisted Sprint 20yd","Power Skip","Box Jump","Bounding","Broad Jump","Ankle Stiffness"]},
+  B:{label:"Session B",athletes:["Joey","Vera"],color:"#00b4d8",hasSprint:false,
+    day1:[{n:"Bench Press",s:"5x5",p:"60-70%"},{n:"Overhead Press",s:"3x8",p:"—"},{n:"Pull-Ups",s:"4x6",p:"BW/Band"},{n:"DB Row",s:"3x10",p:"ea arm"}],
+    day2:[{n:"Squat",s:"5x5",p:"65-75%"},{n:"Deadlift",s:"5x4",p:"65-75%"},{n:"Hack Squat",s:"3x5",p:"—"},{n:"RDL",s:"3x8",p:"—"},{n:"Rotational Med Ball Throw",s:"4x6",p:"ea side"}],
+    vmax:["Box Jump","Power Skip","Rotational Med Ball Throw","Bounding"],
+    runDists:["Mile / 1600m"]},
+  C:{label:"Session C (Joey Solo)",athletes:["Joey"],color:"#9c6fff",hasSprint:false,
+    day1:[{n:"Bench Press",s:"5x5",p:"70-80%"},{n:"Incline DB Press",s:"3x8",p:"—"},{n:"Overhead Press",s:"3x8",p:"—"},{n:"Pull-Ups",s:"4x6",p:"Unassisted goal"},{n:"DB Row",s:"3x10",p:"—"}],
+    day2:[{n:"Squat",s:"5x5",p:"70-80%"},{n:"Deadlift",s:"5x4",p:"75-85%"},{n:"Hack Squat",s:"4x5",p:"—"},{n:"RDL",s:"3x8",p:"—"},{n:"Leg Press",s:"3x10",p:"accessory"}],
+    vmax:[],runDists:["Mile / 1600m"]}
 };
 
-const PHASE_DATA = {
-  'Xavier + Gabby':{color:'#e91e8c',totalWeeks:6,currentWeek:3,
+// Phase data — start dates drive auto-advancement
+const PHASES = {
+  "Xavier + Gabby":{color:"#e91e8c",totalWeeks:6,start:new Date("2026-02-08"),
     weeks:[
-      {wk:1,theme:'Establish',upper:'60-65%',lower:'60-65%',sprint:'Baseline 100m+200m',vertimax:'Box Jump 3x6, Power Skip 3x8',note:'Set sprint baselines',done:true},
-      {wk:2,theme:'Establish',upper:'60-65%',lower:'60-65%',sprint:'100m + 200m quality',vertimax:'Raptor — Resisted Sprint 10yd 4x4',note:'Normal progression',done:true},
-      {wk:3,theme:'Sharpen',upper:'65-70%',lower:'62-67%',sprint:'200m + 300m repeats',vertimax:'Raptor — Bound 3x6, Box Jump 3x8',note:'Bump bench/OHP slightly',done:false,current:true},
-      {wk:4,theme:'Sharpen',upper:'65-70%',lower:'60-65%',sprint:'100m splits + 400m tempo',vertimax:'Raptor — Resisted 20yd 4x4',note:'Hold lower flat',done:false},
-      {wk:5,theme:'Taper',upper:'60-65%',lower:'55-60%',sprint:'Short sharp — 40yd + 60m only',vertimax:'Light — 2-3 drills',note:'Reduce sets',done:false},
-      {wk:6,theme:'PEAK',upper:'55-60%',lower:'50-55%',sprint:'Race week prep only',vertimax:'Minimal',note:'Lift if not race week',done:false}
+      {wk:1,theme:"Establish",upper:"60-65%",lower:"60-65%",vmax:"Box Jump 3x6, Power Skip 3x8",note:"Set sprint baselines",
+       sprint:{dists:["100m","200m"],reps:2,rest:"Full (3-4 min)",target:"Baseline — just log times, no pressure"}},
+      {wk:2,theme:"Establish",upper:"60-65%",lower:"60-65%",vmax:"Raptor — Resisted Sprint 10yd 4x4",note:"Normal progression",
+       sprint:{dists:["100m","200m"],reps:3,rest:"Full (3-4 min)",target:"Beat baseline times from Week 1"}},
+      {wk:3,theme:"Sharpen",upper:"65-70%",lower:"62-67%",vmax:"Raptor — Bound 3x6, Box Jump 3x8",note:"Bump bench/OHP slightly",
+       sprint:{dists:["200m","300m"],reps:3,rest:"Full (4-5 min)",target:"Xavier <29.5 / Gabby sub-baseline+1sec"}},
+      {wk:4,theme:"Sharpen",upper:"65-70%",lower:"60-65%",vmax:"Raptor — Resisted 20yd 4x4, Broad Jump 3x5",note:"Hold lower flat",
+       sprint:{dists:["100m","400m"],reps:3,rest:"3 min between 100s, full before 400",target:"100m max effort / 400m at tempo pace"}},
+      {wk:5,theme:"Taper",upper:"60-65%",lower:"55-60%",vmax:"Light — Ankle Stiff 3x10, Power Skip 2x6",note:"Reduce sets — protect legs",
+       sprint:{dists:["40yd","60m"],reps:3,rest:"Full — quality over quantity",target:"Max effort sharpening — race pace"}},
+      {wk:6,theme:"PEAK",upper:"55-60%",lower:"50-55%",vmax:"2-3 drills only, light band",note:"Lift only if not race day",
+       sprint:{dists:["60m"],reps:2,rest:"Full",target:"Shakeout only — save everything for race"}}
     ]},
-  'Joey':{color:'#00b4d8',totalWeeks:10,currentWeek:1,
+  "Joey":{color:"#00b4d8",totalWeeks:10,start:new Date("2026-02-22"),
     weeks:[
-      {wk:1,theme:'Base',upper:'65%',lower:'65-70%',sprint:'5 mi/wk assigned',vertimax:'—',note:'Build consistency',done:false,current:true},
-      {wk:2,theme:'Base',upper:'67%',lower:'67-72%',sprint:'5 mi/wk',vertimax:'—',note:'Small weight jumps',done:false},
-      {wk:3,theme:'Base',upper:'70%',lower:'70-75%',sprint:'5 mi/wk',vertimax:'—',note:'Test unassisted pull-ups',done:false},
-      {wk:4,theme:'Accum',upper:'72-75%',lower:'72-77%',sprint:'—',vertimax:'—',note:'Push weight',done:false},
-      {wk:5,theme:'Accum',upper:'75-78%',lower:'75-80%',sprint:'—',vertimax:'—',note:'Rep PRs expected',done:false},
-      {wk:6,theme:'Accum',upper:'78-80%',lower:'80-85%',sprint:'—',vertimax:'—',note:'DL focus week',done:false},
-      {wk:7,theme:'Peak',upper:'80-82%',lower:'83-88%',sprint:'—',vertimax:'—',note:'Bench PR attempt',done:false},
-      {wk:8,theme:'Peak',upper:'82-85%',lower:'85-90%',sprint:'—',vertimax:'—',note:'Squat PR attempt',done:false},
-      {wk:9,theme:'Peak',upper:'85%+',lower:'88-92%',sprint:'—',vertimax:'—',note:'DL max test',done:false},
-      {wk:10,theme:'DELOAD',upper:'50-55%',lower:'50-55%',sprint:'Retest',vertimax:'—',note:'Retest all lifts',done:false}
+      {wk:1,theme:"Base",upper:"65%",lower:"65-70%",vmax:"—",note:"Build consistency, log every set"},
+      {wk:2,theme:"Base",upper:"67%",lower:"67-72%",vmax:"—",note:"Small weight jumps only"},
+      {wk:3,theme:"Base",upper:"70%",lower:"70-75%",vmax:"—",note:"Test unassisted pull-ups this week"},
+      {wk:4,theme:"Accum",upper:"72-75%",lower:"72-77%",vmax:"—",note:"Push weight — small jumps each session"},
+      {wk:5,theme:"Accum",upper:"75-78%",lower:"75-80%",vmax:"—",note:"Rep PRs expected this week"},
+      {wk:6,theme:"Accum",upper:"78-80%",lower:"80-85%",vmax:"—",note:"Deadlift focus — push hard"},
+      {wk:7,theme:"Peak",upper:"80-82%",lower:"83-88%",vmax:"—",note:"Bench PR attempt"},
+      {wk:8,theme:"Peak",upper:"82-85%",lower:"85-90%",vmax:"—",note:"Squat PR attempt"},
+      {wk:9,theme:"Peak",upper:"85%+",lower:"88-92%",vmax:"—",note:"Deadlift max test"},
+      {wk:10,theme:"DELOAD",upper:"50-55%",lower:"50-55%",vmax:"—",note:"Retest all lifts — log final PRs"}
+    ]},
+  "Vera":{color:"#2ecc71",totalWeeks:10,start:new Date("2026-02-22"),
+    weeks:[
+      {wk:1,theme:"Base",upper:"65%",lower:"65%",vmax:"Rotational throw 4x6",note:"Full health — establish all baselines"},
+      {wk:2,theme:"Base",upper:"67%",lower:"67%",vmax:"Rotational throw 4x6, Power Skip 3x8",note:"Small weight jumps"},
+      {wk:3,theme:"Base",upper:"70%",lower:"70%",vmax:"Rotational throw 4x8, Box Jump 3x6",note:"Progress OHP to 20s this week"},
+      {wk:4,theme:"Accum",upper:"72-75%",lower:"72%",vmax:"Rotational throw 4x8, Bound 3x6",note:"Bench PR attempt — she is strong"},
+      {wk:5,theme:"Accum",upper:"75%",lower:"75%",vmax:"Med Ball Slam 3x8, Rotational throw 4x8",note:"Push lower — DL and squat"},
+      {wk:6,theme:"Accum",upper:"78%",lower:"78%",vmax:"Rotational throw 5x6 heavy",note:"Power focus — discus carryover"},
+      {wk:7,theme:"Peak",upper:"80%",lower:"80%",vmax:"Full power circuit",note:"Bench + DL PR attempts"},
+      {wk:8,theme:"Peak",upper:"82%",lower:"82%",vmax:"Full power circuit",note:"Squat PR attempt"},
+      {wk:9,theme:"Peak",upper:"85%",lower:"83%",vmax:"—",note:"Max strength test week"},
+      {wk:10,theme:"DELOAD",upper:"50-55%",lower:"50-55%",vmax:"Light throws only",note:"Retest all lifts — log final PRs"}
     ]}
 };
 
-// The Google Apps Script code to display/copy
-const APPS_SCRIPT = `function doPost(e) {
-  try {
-    var raw = e.postData ? e.postData.contents : '';
-    var data = JSON.parse(raw);
+const APPS_SCRIPT_CODE = `function doPost(e){
+  try{
+    var data=JSON.parse(e.postData.contents);
     return handle(data);
-  } catch(err) {
-    return out({status:'error', message:err.toString()});
-  }
+  }catch(err){return out({status:"error",message:err.toString()});}
 }
-
-function doGet(e) {
-  try {
-    var payload = e.parameter ? e.parameter.payload : null;
-    if (!payload) return out({status:'ok', message:'HoH API running'});
-    return handle(JSON.parse(payload));
-  } catch(err) {
-    return out({status:'error', message:err.toString()});
-  }
+function doGet(e){
+  if(e.parameter&&e.parameter.payload)
+    return handle(JSON.parse(e.parameter.payload));
+  return out({status:"ok",message:"HoH API running"});
 }
-
-function handle(data) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var type = data.type;
-  if (type === 'session') logSession(ss, data);
-  else if (type === 'pr') logPR(ss, data);
-  else if (type === 'ping') logPing(ss);
-  return out({status:'ok'});
+function handle(data){
+  var ss=SpreadsheetApp.getActiveSpreadsheet();
+  if(data.type==="session") logSession(ss,data);
+  else if(data.type==="pr") logPR(ss,data);
+  else if(data.type==="ping") logPing(ss);
+  return out({status:"ok"});
 }
-
-function out(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
+function out(o){
+  return ContentService.createTextOutput(JSON.stringify(o))
     .setMimeType(ContentService.MimeType.JSON);
 }
+function logPing(ss){
+  var sh=ss.getSheetByName("Sync Log")||ss.insertSheet("Sync Log");
+  if(sh.getLastRow()===0){sh.appendRow(["Timestamp","Event"]);sh.getRange(1,1,1,2).setFontWeight("bold");}
+  sh.appendRow([new Date().toLocaleString(),"Ping from HoH app"]);
+}
+function logSession(ss,data){
+  var sh=ss.getSheetByName("Sessions");
+  if(!sh){sh=ss.insertSheet("Sessions");var h=["Date","Session","Athletes","Athlete","Day","Lift","Set","Weight","Reps","Notes"];sh.appendRow(h);sh.getRange(1,1,1,h.length).setFontWeight("bold").setBackground("#1a2744").setFontColor("#ffffff");}
+  (data.rows||[]).forEach(function(r){sh.appendRow([r.date,r.session,r.athletes,r.athlete,r.day,r.lift,r.set,r.weight,r.reps,r.notes||""]);});
+}
+function logPR(ss,data){
+  var sh=ss.getSheetByName("PRs");
+  if(!sh){sh=ss.insertSheet("PRs");var h=["Date","Athlete","Lift","New PR","Previous PR","Unit","Notes"];sh.appendRow(h);sh.getRange(1,1,1,h.length).setFontWeight("bold").setBackground("#1a2744").setFontColor("#ffffff");}
+  sh.appendRow([data.date,data.athlete,data.lift,data.newVal,data.oldVal,data.unit,data.notes||""]);
+}`;
 
-function logPing(ss) {
-  var sheet = ss.getSheetByName('Sync Log');
-  if (!sheet) {
-    sheet = ss.insertSheet('Sync Log');
-    sheet.appendRow(['Timestamp', 'Event']);
-    sheet.getRange(1,1,1,2).setFontWeight('bold')
-      .setBackground('#1a2744').setFontColor('#ffffff');
-  }
-  sheet.appendRow([new Date().toLocaleString(), 'Ping from HoH app']);
+// ═══════════════════════════ STATE ═══════════════════════════
+let curSess=null, activeAth=null, sessLogs={}, sessNotes="";
+let curModal=null, editTarget=null;
+let sheetsURL=localStorage.getItem("hoh_url")||"";
+
+// ═══════════════════════════ NAV ════════════════════════════
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="s-home") renderHome();
+  if(id==="s-athletes") renderAthletes();
+  if(id==="s-lb") renderLB();
+  if(id==="s-phase") renderPhase();
+  if(id==="s-settings") renderSettings();
 }
 
-function logSession(ss, data) {
-  var sheet = ss.getSheetByName('Sessions');
-  if (!sheet) {
-    sheet = ss.insertSheet('Sessions');
-    var hdr = ['Date','Session','Athletes','Athlete','Day','Lift','Set','Weight','Reps','Notes'];
-    sheet.appendRow(hdr);
-    sheet.getRange(1,1,1,hdr.length).setFontWeight('bold')
-      .setBackground('#1a2744').setFontColor('#ffffff');
-  }
-  (data.rows || []).forEach(function(r) {
-    sheet.appendRow([r.date,r.session,r.athletes,r.athlete,
-      r.day,r.lift,r.set,r.weight,r.reps,r.notes||'']);
-  });
-}
-
-function logPR(ss, data) {
-  var sheet = ss.getSheetByName('PRs');
-  if (!sheet) {
-    sheet = ss.insertSheet('PRs');
-    var hdr = ['Date','Athlete','Lift','New PR','Previous PR','Unit','Notes'];
-    sheet.appendRow(hdr);
-    sheet.getRange(1,1,1,hdr.length).setFontWeight('bold')
-      .setBackground('#1a2744').setFontColor('#ffffff');
-  }
-  sheet.appendRow([data.date,data.athlete,data.lift,
-    data.newVal,data.oldVal,data.unit,data.notes||'']);
-}`
-
-// ═══════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════
-let currentSession = null;
-let activeAthlete = null;   // which athlete is active in shared session
-let sessionLogs = {};       // {athleteName: {day_liftIdx_setIdx: {w,r}}}
-let sessionNotes = '';
-let currentSetModal = null;
-let sheetsURL = localStorage.getItem('hoh_sheets_url') || '';
-
-// ═══════════════════════════════════════════════════════════
-// NAV
-// ═══════════════════════════════════════════════════════════
-function navTo(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(id==='screen-leaderboard') renderLeaderboard();
-  if(id==='screen-phase') renderPhase();
-  if(id==='screen-athletes') renderAthletes();
-  if(id==='screen-home') renderHome();
-  if(id==='screen-settings') renderSettings();
-}
-
-// ═══════════════════════════════════════════════════════════
-// HOME
-// ═══════════════════════════════════════════════════════════
-function renderHome() {
-  const now = new Date();
-  document.getElementById('home-date').textContent = now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  document.getElementById('home-day').textContent = now.toLocaleDateString('en-US',{weekday:'long'});
-  let totalPRs=0; Object.values(ATHLETES).forEach(a=>{totalPRs+=a.history.length;});
-  const saved = getSavedSessions();
-  document.getElementById('home-stats').innerHTML=`
-    <div class="stat-chip"><div class="stat-num">4</div><div class="stat-label">Athletes</div></div>
-    <div class="stat-chip"><div class="stat-num">${totalPRs}</div><div class="stat-label">Total PRs</div></div>
-    <div class="stat-chip"><div class="stat-num">${saved.length}</div><div class="stat-label">Sessions</div></div>`;
-  const el = document.getElementById('recent-sessions');
-  if(!saved.length){el.innerHTML=`<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px;">No sessions yet. Start one above ↑</div>`;return;}
+// ═══════════════════════════ HOME ═══════════════════════════
+function renderHome(){
+  const now=new Date();
+  document.getElementById("h-date").textContent=now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+  document.getElementById("h-day").textContent=now.toLocaleDateString("en-US",{weekday:"long"});
+  const saved=getSaved();
+  let prCount=0; Object.values(ATH).forEach(a=>{prCount+=a.hist.length;});
+  document.getElementById("h-stats").innerHTML=`
+    <div class="qc"><div class="qn">4</div><div class="ql">Athletes</div></div>
+    <div class="qc"><div class="qn">${prCount}</div><div class="ql">PRs</div></div>
+    <div class="qc"><div class="qn">${saved.length}</div><div class="ql">Sessions</div></div>`;
+  const el=document.getElementById("h-recent");
+  if(!saved.length){el.innerHTML=`<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px;">No sessions yet — start one above ↑</div>`;return;}
   el.innerHTML=saved.slice(0,20).map((s,i)=>`
-    <div class="card" style="margin-bottom:8px;padding:12px 16px;">
+    <div class="card" style="padding:12px 16px;margin-bottom:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-        <div style="flex:1;min-width:0;cursor:pointer;" onclick="editSession(${i})">
+        <div style="flex:1;min-width:0;cursor:pointer;" onclick="openEdit(${i})">
           <div style="font-weight:600;font-size:14px;">${s.label}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;">${s.date} · ${s.athletes}</div>
-          ${s.notes?`<div style="font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${s.notes}</div>`:''}
+          ${s.notes?`<div style="font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${s.notes}</div>`:""}
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
-          <div style="font-size:11px;color:var(--muted);text-align:right;">${s.setsLogged} sets<br>${s.synced?'<span style="color:var(--green)">&#10003; synced</span>':'<span style="color:var(--muted)">local</span>'}</div>
+          <div style="font-size:11px;color:var(--muted);text-align:right;">${s.setsLogged} sets<br>${s.synced?"<span style='color:var(--green)'>✓ synced</span>":"<span style='color:var(--muted)'>local</span>"}</div>
           <div style="display:flex;gap:6px;">
-            <button onclick="editSession(${i})" style="background:rgba(232,168,56,0.12);border:1px solid rgba(232,168,56,0.3);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">EDIT</button>
-            <button onclick="deleteSession(${i})" style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:#e74c3c;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">DEL</button>
+            <button onclick="openEdit(${i})" style="background:rgba(232,168,56,0.12);border:1px solid rgba(232,168,56,0.3);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">EDIT</button>
+            <button onclick="delSess(${i})" style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:var(--red);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;">DEL</button>
           </div>
         </div>
       </div>
-    </div>`).join('');
+    </div>`).join("");
 }
 
-// ═══════════════════════════════════════════════════════════
-// ATHLETES
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════ ATHLETES ═══════════════════════
 function renderAthletes(){
-  document.getElementById('athlete-list').innerHTML=Object.entries(ATHLETES).map(([name,a])=>`
-    <div class="athlete-card" onclick="showAthleteDetail('${name}')">
-      <div class="athlete-avatar" style="background:${a.bg};border-color:${a.color};color:${a.color}">${name[0]}</div>
+  document.getElementById("ath-list").innerHTML=Object.entries(ATH).map(([name,a])=>`
+    <div class="ath-card" onclick="showAth('${name}')">
+      <div class="avatar" style="background:${a.bg};border-color:${a.color};color:${a.color}">${name[0]}</div>
       <div style="flex:1;min-width:0;">
-        <div class="athlete-name" style="color:${a.color}">${name}</div>
-        <div class="athlete-meta">${a.age} · ${a.school}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:${a.color}">${name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${a.age} · ${a.school}</div>
         <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
-          <span class="tag" style="background:${a.bg};color:${a.color}">Session ${a.session}</span>
+          <span class="tag" style="background:${a.bg};color:${a.color}">Sess ${a.sess}</span>
           <span class="tag">${a.status}</span>
         </div>
       </div>
       <div style="color:var(--muted);font-size:20px;">›</div>
-    </div>`).join('');
+    </div>`).join("");
 }
 
-function showAthleteDetail(name){
-  const a=ATHLETES[name];
-  document.getElementById('detail-name').textContent=name;
-  document.getElementById('detail-sport').textContent=a.sport;
+function showAth(name){
+  const a=ATH[name];
+  document.getElementById("d-name").textContent=name;
+  document.getElementById("d-sport").textContent=a.sport;
   const prKeys=Object.keys(a.prs).slice(0,6);
-  document.getElementById('detail-prs').innerHTML=prKeys.map(k=>`
+  document.getElementById("d-prs").innerHTML=prKeys.map(k=>`
     <div class="pr-mini">
       <div class="pr-mini-label">${k}</div>
-      <div class="pr-mini-val" style="color:${a.color}">${a.prs[k].val} ${['lbs','reps'].includes(a.prs[k].unit)?a.prs[k].unit:''}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:2px;">${a.prs[k].date}</div>
-    </div>`).join('');
-  document.getElementById('detail-pr-update').innerHTML=Object.keys(a.prs).map(k=>`
+      <div class="pr-mini-val" style="color:${a.color}">${a.prs[k].v}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">${a.prs[k].d}</div>
+    </div>`).join("");
+  document.getElementById("d-update").innerHTML=Object.keys(a.prs).map(k=>`
     <div class="sprint-row">
-      <div class="sprint-dist">${k}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${a.color};margin-right:10px;">${a.prs[k].val}</div>
-      <button onclick="promptPRUpdate('${name}','${k}')" style="background:${a.bg};border:1px solid ${a.color};color:${a.color};border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">UPDATE</button>
-    </div>`).join('');
-  document.getElementById('detail-history').innerHTML=a.history.length
-    ?a.history.map(h=>`<div class="history-row"><div class="history-date">${h.date}</div><div class="history-lift">${h.lift}</div><div class="history-val">${h.val}</div></div>`).join('')
-    :`<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">No PR history yet</div>`;
-  navTo('screen-athlete-detail');
+      <div style="flex:1;font-size:13px;font-weight:600;">${k}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${a.color};margin-right:10px;">${a.prs[k].v}</div>
+      <button onclick="promptPR('${name}','${k}')" style="background:${a.bg};border:1px solid ${a.color};color:${a.color};border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">UPDATE</button>
+    </div>`).join("");
+  document.getElementById("d-hist").innerHTML=a.hist.length
+    ?a.hist.map(h=>`<div class="hist-row"><div style="font-size:11px;color:var(--muted);width:65px;flex-shrink:0;">${h.d}</div><div style="flex:1;font-size:13px;font-weight:600;">${h.l}</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:${a.color};">${h.v}</div></div>`).join("")
+    :`<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">No history yet</div>`;
+  go("s-ath-detail");
 }
 
-function promptPRUpdate(athleteName,lift){
-  const a=ATHLETES[athleteName];
-  currentSetModal={type:'pr',athleteName,lift};
-  document.getElementById('modal-title').textContent=`Update PR — ${lift}`;
-  document.getElementById('modal-sub').textContent=`${athleteName} · Current: ${a.prs[lift].val} ${a.prs[lift].unit}`;
-  document.getElementById('modal-label1').textContent=TIMED.has(lift)?'Time (mm:ss)':'Value';
-  document.getElementById('modal-label2').textContent='Date (optional)';
-  document.getElementById('modal-weight').type=TIMED.has(lift)?'text':'number';
-  document.getElementById('modal-weight').value='';
-  document.getElementById('modal-reps').value='';
-  document.getElementById('modal').classList.add('show');
-  setTimeout(()=>document.getElementById('modal-weight').focus(),300);
+function promptPR(name,lift){
+  const a=ATH[name];
+  curModal={type:"pr",name,lift};
+  document.getElementById("m-title").textContent=`Update — ${lift}`;
+  document.getElementById("m-sub").textContent=`${name} · Current: ${a.prs[lift].v} ${a.prs[lift].u}`;
+  document.getElementById("m-l1").textContent=TIMED.has(lift)?"Time":"Value";
+  document.getElementById("m-l2").textContent="Date (opt)";
+  document.getElementById("m-w").type=TIMED.has(lift)?"text":"number";
+  document.getElementById("m-w").value="";
+  document.getElementById("m-r").value="";
+  document.getElementById("modal").classList.add("show");
+  setTimeout(()=>document.getElementById("m-w").focus(),300);
 }
 
-// ═══════════════════════════════════════════════════════════
-// LEADERBOARD
-// ═══════════════════════════════════════════════════════════
-function renderLeaderboard(){
-  const cats=['Bench Press','Squat','Deadlift','Overhead Press','Hack Squat','Pull-Ups','Mile Time','200m'];
-  document.getElementById('lb-content').innerHTML=cats.map(cat=>{
-    const isLower=TIMED.has(cat);
-    const entries=Object.entries(ATHLETES)
-      .filter(([,a])=>a.prs[cat]&&a.prs[cat].val&&a.prs[cat].val!=='—')
-      .map(([name,a])=>({name,val:a.prs[cat].val,color:a.color}))
-      .sort((a,b)=>{const av=parseTV(a.val),bv=parseTV(b.val);return isLower?av-bv:bv-av;});
-    const medals=['🥇','🥈','🥉'];
-    return `<div class="leaderboard-section">
-      <div class="lb-header">${isLower?'⏱':'🏋️'} ${cat}</div>
-      ${entries.map((e,i)=>`<div class="lb-row ${i<3?'rank-'+(i+1):''}">
+// ═══════════════════════════ LEADERBOARD ════════════════════
+function renderLB(){
+  const cats=["Bench Press","Squat","Deadlift","Overhead Press","Hack Squat","Pull-Ups","Mile Time","200m"];
+  document.getElementById("lb-content").innerHTML=cats.map(cat=>{
+    const isLo=TIMED.has(cat);
+    const entries=Object.entries(ATH)
+      .filter(([,a])=>a.prs[cat]&&a.prs[cat].v!==undefined)
+      .map(([name,a])=>({name,v:a.prs[cat].v,color:a.color}))
+      .sort((a,b)=>{const av=parseT(a.v),bv=parseT(b.v);return isLo?av-bv:bv-av;});
+    const medals=["🥇","🥈","🥉"];
+    return `<div class="lb-sec">
+      <div class="lb-hdr">${isLo?"⏱":"🏋️"} ${cat}</div>
+      ${entries.map((e,i)=>`<div class="lb-row ${i<3?"r"+(i+1):""}">
         <div class="lb-rank">${medals[i]||i+1}</div>
         <div class="lb-name" style="color:${e.color}">${e.name}</div>
-        <div class="lb-val">${e.val}</div>
-      </div>`).join('')}
+        <div class="lb-val">${e.v}</div>
+      </div>`).join("")}
     </div>`;
-  }).join('');
+  }).join("");
 }
-function parseTV(v){const s=String(v);if(s.includes(':')){{const p=s.split(':');return parseFloat(p[0])*60+parseFloat(p[1]);}}return parseFloat(s)||0;}
+function parseT(v){const s=String(v);if(s.includes(":")){const p=s.split(":");return parseFloat(p[0])*60+parseFloat(p[1]);}return parseFloat(s)||0;}
 
-// ═══════════════════════════════════════════════════════════
-// PHASE
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════ PHASE ══════════════════════════
+function curWeek(p){
+  const ms=7*24*60*60*1000;
+  const wk=Math.floor((new Date()-p.start)/ms)+1;
+  return Math.max(1,Math.min(wk,p.totalWeeks));
+}
+
 function renderPhase(){
-  let html='';
-  Object.entries(PHASE_DATA).forEach(([group,p])=>{
-    const done=p.weeks.filter(w=>w.done).length;
-    const pct=Math.round(done/p.totalWeeks*100);
-    const cur=p.weeks.find(w=>w.current);
-    html+=`<div class="phase-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div><div class="phase-title" style="color:${p.color}">${group}</div>
-          <div class="phase-sub">${p.totalWeeks}-Week Block · Wk ${p.currentWeek} of ${p.totalWeeks}</div></div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:${p.color}">${pct}%</div>
-      </div>
-      <div class="phase-progress"><div class="phase-bar" style="width:${pct}%;background:${p.color}"></div></div>
-      <div class="phase-weeks">${p.weeks.map(w=>`<div class="week-dot ${w.done?'done':''} ${w.current?'current':''}" onclick="alertWeek('${group}',${w.wk-1})">${w.wk}</div>`).join('')}</div>
+  let html="";
+
+  // ── Xavier + Gabby ──────────────────────────────────
+  const xg=PHASES["Xavier + Gabby"],xgW=curWeek(xg),xgPct=Math.round((xgW-1)/xg.totalWeeks*100),xgCur=xg.weeks[xgW-1];
+  html+=phaseCard("Xavier + Gabby",xg,xgW,xgPct);
+  if(xgCur){
+    html+=`<div class="wk-detail" style="border-color:rgba(233,30,140,0.25);">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1.5px;color:#e91e8c;margin-bottom:10px;">📋 WEEK ${xgCur.wk} — ${xgCur.theme}</div>
+      <div class="wk-row"><div class="wk-label">Upper</div><div class="wk-val" style="color:#e91e8c;font-family:'JetBrains Mono',monospace;">${xgCur.upper}</div></div>
+      <div class="wk-row"><div class="wk-label">Lower</div><div class="wk-val" style="color:#e91e8c;font-family:'JetBrains Mono',monospace;">${xgCur.lower}</div></div>
+      <div class="wk-row"><div class="wk-label">Vertimax</div><div class="wk-val">${xgCur.vmax}</div></div>
+      ${xgCur.sprint?`<div class="wk-row" style="align-items:flex-start;"><div class="wk-label">Sprint Workout</div><div class="wk-val"><span style="color:var(--accent);font-weight:700;">${xgCur.sprint.dists.join(" + ")}</span><br><span style="font-size:11px;color:var(--muted);">${xgCur.sprint.reps} reps each · ${xgCur.sprint.rest}</span><br><span style="font-size:11px;color:var(--text);">${xgCur.sprint.target}</span></div></div>`:""}
+      <div class="wk-row"><div class="wk-label">Note</div><div class="wk-val" style="color:var(--accent);">${xgCur.note}</div></div>
     </div>`;
-    if(cur){html+=`<div class="week-detail">
-      <div class="week-detail-header">📋 Week ${cur.wk} — ${cur.theme}</div>
-      <div class="week-row"><div class="week-row-label">Upper %</div><div class="week-row-val" style="color:${p.color}">${cur.upper}</div></div>
-      <div class="week-row"><div class="week-row-label">Lower %</div><div class="week-row-val" style="color:${p.color}">${cur.lower}</div></div>
-      <div class="week-row"><div class="week-row-label">Sprint Focus</div><div class="week-row-val">${cur.sprint}</div></div>
-      <div class="week-row"><div class="week-row-label">Vertimax</div><div class="week-row-val">${cur.vertimax}</div></div>
-      <div class="week-row"><div class="week-row-label">Coach Note</div><div class="week-row-val" style="color:var(--accent)">${cur.note}</div></div>
-    </div>`;}
-  });
-  html+=`<div class="phase-card" style="border-color:rgba(46,204,113,0.3)">
-    <div class="phase-title" style="color:#2ecc71">Vera</div>
-    <div class="phase-sub">Reactive Phase · Discus Season</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.6">Session-by-session based on leg status.<br><span style="color:#2ecc71;font-weight:600">Post-season:</span> 8-week block when ready.</div>
+  }
+
+  // ── Joey + Vera side by side ─────────────────────────
+  const jp=PHASES["Joey"],vp=PHASES["Vera"];
+  const jW=curWeek(jp),vW=curWeek(vp);
+  const jPct=Math.round((jW-1)/jp.totalWeeks*100),vPct=Math.round((vW-1)/vp.totalWeeks*100);
+  const jCur=jp.weeks[jW-1],vCur=vp.weeks[vW-1];
+
+  // Combined progress card
+  html+=`<div class="phase-card" style="border-color:rgba(0,180,216,0.2);margin-top:8px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:#00b4d8">Joey</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Wk ${jW} of ${jp.totalWeeks} · ${jCur?jCur.theme:''}</div>
+        <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${jPct}%;background:#00b4d8;border-radius:3px;"></div></div>
+        <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">${jp.weeks.map((w,i)=>`<div class="wk-dot ${i<jW-1?"done":""} ${i===jW-1?"cur":""}" onclick="wkAlert('Joey',${i})" style="width:26px;height:26px;font-size:12px;">${w.wk}</div>`).join("")}</div>
+      </div>
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:#2ecc71">Vera</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Wk ${vW} of ${vp.totalWeeks} · ${vCur?vCur.theme:''}</div>
+        <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${vPct}%;background:#2ecc71;border-radius:3px;"></div></div>
+        <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;">${vp.weeks.map((w,i)=>`<div class="wk-dot ${i<vW-1?"done":""} ${i===vW-1?"cur":""}" onclick="wkAlert('Vera',${i})" style="width:26px;height:26px;font-size:12px;">${w.wk}</div>`).join("")}</div>
+      </div>
+    </div>
   </div>`;
-  document.getElementById('phase-content').innerHTML=html;
-}
-function alertWeek(group,idx){const p=PHASE_DATA[group],w=p.weeks[idx];alert(`Week ${w.wk} — ${w.theme}\nUpper: ${w.upper} | Lower: ${w.lower}\nSprint: ${w.sprint}\nVertimax: ${w.vertimax}\nNote: ${w.note}`);}
 
-// ═══════════════════════════════════════════════════════════
-// SESSION — SHARED ATHLETE SWITCHER
-// ═══════════════════════════════════════════════════════════
+  // Joey + Vera current week side by side detail
+  if(jCur && vCur){
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div class="wk-detail" style="border-color:rgba(0,180,216,0.3);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:#00b4d8;margin-bottom:8px;">💪 Joey — Wk ${jW}</div>
+        <div class="wk-row"><div class="wk-label">Upper</div><div class="wk-val" style="color:#00b4d8;">${jCur.upper}</div></div>
+        <div class="wk-row"><div class="wk-label">Lower</div><div class="wk-val" style="color:#00b4d8;">${jCur.lower}</div></div>
+        <div class="wk-row"><div class="wk-label">Focus</div><div class="wk-val">${jCur.note}</div></div>
+      </div>
+      <div class="wk-detail" style="border-color:rgba(46,204,113,0.3);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:#2ecc71;margin-bottom:8px;">🥏 Vera — Wk ${vW}</div>
+        <div class="wk-row"><div class="wk-label">Upper</div><div class="wk-val" style="color:#2ecc71;">${vCur.upper}</div></div>
+        <div class="wk-row"><div class="wk-label">Lower</div><div class="wk-val" style="color:#2ecc71;">${vCur.lower}</div></div>
+        <div class="wk-row"><div class="wk-label">Vertimax</div><div class="wk-val">${vCur.vmax}</div></div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById("phase-content").innerHTML=html;
+}
+
+function phaseCard(group,p,cw,pct){
+  return `<div class="phase-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:${p.color}">${group}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px;">${p.totalWeeks}-Week Block · <span style="color:${p.color};font-weight:700;">Week ${cw}</span> · Auto-advances weekly</div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:${p.color}">${pct}%</div>
+    </div>
+    <div class="phase-prog"><div class="phase-bar" style="width:${pct}%;background:${p.color}"></div></div>
+    <div class="wk-dots">${p.weeks.map((w,i)=>`<div class="wk-dot ${i<cw-1?"done":""} ${i===cw-1?"cur":""}" onclick="wkAlert('${group}',${i})">${w.wk}</div>`).join("")}</div>
+  </div>`;
+}
+
+function wkAlert(group,idx){
+  const p=PHASES[group],w=p.weeks[idx],cw=curWeek(p);
+  const status=idx<cw-1?"✅ Complete":idx===cw-1?"📍 Current":"🔒 Upcoming";
+  let msg=`${status}
+Week ${w.wk} — ${w.theme}
+
+Upper: ${w.upper}
+Lower: ${w.lower}
+Vertimax: ${w.vmax}
+Note: ${w.note}`;
+  if(w.sprint) msg+=`
+
+Sprint Workout:
+${w.sprint.dists.join(" + ")} · ${w.sprint.reps} reps
+Rest: ${w.sprint.rest}
+Target: ${w.sprint.target}`;
+  alert(msg);
+}
+
+// ═══════════════════════════ SESSION ════════════════════════
 function startSession(type){
-  const sd=SESSIONS_DEF[type];
-  currentSession={type,data:sd,day:1,startTime:Date.now()};
-  sessionLogs={};
-  sessionNotes='';
-  // initialize logs per athlete
-  sd.athletes.forEach(a=>{sessionLogs[a]={};});
-  // default active athlete = first
-  activeAthlete=sd.athletes[0];
-  document.getElementById('session-title-bar').textContent=sd.label;
-  document.getElementById('session-date-bar').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  renderSession();
-  navTo('screen-session');
+  const sd=SESS[type];
+  curSess={type,sd,day:1};
+  sessLogs={}; sessNotes="";
+  sd.athletes.forEach(a=>{sessLogs[a]={};});
+  sessLogs._shared={};
+  activeAth=sd.athletes[0];
+  document.getElementById("sess-title").textContent=sd.label;
+  document.getElementById("sess-date").textContent=new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"});
+  renderSess();
+  go("s-session");
 }
 
-function switchAthlete(name){
-  activeAthlete=name;
-  renderSession();
-  // scroll to top
-  document.getElementById('session-content').scrollTop=0;
-}
+function switchAth(name){activeAth=name;renderSess();document.getElementById("sess-content").scrollTop=0;}
+function switchDay(d){curSess.day=d;renderSess();}
+function cntSets(name){return Object.values(sessLogs[name]||{}).filter(v=>v&&(v.w||v.r||v.name)).length;}
 
-function switchDay(day){currentSession.day=day;renderSession();}
-
-function countAthletesSets(athleteName){
-  const logs=sessionLogs[athleteName]||{};
-  return Object.values(logs).filter(v=>v&&(v.w||v.r)).length;
-}
-
-function renderSession(){
-  const s=currentSession;
-  const sd=s.data;
+function renderSess(){
+  const {sd,day}=curSess;
   const isShared=sd.athletes.length>1;
-  const lifts=s.day===1?sd.day1:sd.day2;
+  const lifts=day===1?sd.day1:sd.day2;
+  let html="";
 
-  let html='';
-
-  // Athlete switcher (only for shared sessions)
+  // Athlete switcher
   if(isShared){
-    html+=`<div class="athlete-switcher">`;
+    html+=`<div class="switcher">`;
     sd.athletes.forEach(name=>{
-      const a=ATHLETES[name];
-      const sets=countAthletesSets(name);
-      const isActive=activeAthlete===name;
-      html+=`<div class="switcher-btn ${isActive?'active-athlete':''}"
-        style="${isActive?`background:${a.color};`:`color:${a.color};`}"
-        onclick="switchAthlete('${name}')">
-        ${name}
-        <div class="switcher-sets">${sets} sets logged</div>
-      </div>`;
+      const a=ATH[name], isAct=activeAth===name, cnt=cntSets(name);
+      html+=`<div class="sw-btn ${isAct?"active-a":""}" style="${isAct?`background:${a.color};`:`color:${a.color};`}" onclick="switchAth('${name}')">${name}<div class="sw-sub">${cnt} sets</div></div>`;
     });
     html+=`</div>`;
   }
 
-  // Current athlete banner
-  const curA=ATHLETES[activeAthlete];
-  html+=`<div style="background:${curA.bg};border:1px solid ${curA.color}30;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
-    <div style="width:34px;height:34px;border-radius:50%;background:${curA.color}30;border:1px solid ${curA.color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:${curA.color}">${activeAthlete[0]}</div>
+  // Active athlete banner
+  const cA=ATH[activeAth];
+  html+=`<div style="background:${cA.bg};border:1px solid ${cA.color}40;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+    <div style="width:34px;height:34px;border-radius:50%;background:${cA.color}25;border:1px solid ${cA.color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:${cA.color}">${activeAth[0]}</div>
     <div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${curA.color}">Logging for ${activeAthlete}</div>
-      <div style="font-size:11px;color:var(--muted);">${isShared?'Tap name above to switch athletes':''}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${cA.color}">Logging for ${activeAth}</div>
+      <div style="font-size:11px;color:var(--muted);">${isShared?"Tap name above to switch":""}</div>
     </div>
   </div>`;
 
+  // Day toggle
   html+=`<div class="day-toggle">
-    <div class="day-btn ${s.day===1?'active':''}" onclick="switchDay(1)">Day 1 — Upper</div>
-    <div class="day-btn ${s.day===2?'active':''}" onclick="switchDay(2)">Day 2 — Lower</div>
+    <div class="day-btn ${day===1?"active":""}" onclick="switchDay(1)">Day 1 — Upper</div>
+    <div class="day-btn ${day===2?"active":""}" onclick="switchDay(2)">Day 2 — Lower</div>
   </div>`;
 
+  // Lifts
   lifts.forEach((lift,li)=>{
-    const sets=parseInt(lift.scheme.split('x')[0])||5;
-    const logKey=`day${s.day}_${li}`;
-    const athleteLogs=sessionLogs[activeAthlete]||{};
+    const nSets=parseInt(lift.s.split("x")[0])||5;
+    const lk=`d${day}_${li}`;
+    const aLog=sessLogs[activeAth]||{};
     html+=`<div class="lift-block">
-      <div class="lift-name">${lift.name}<span class="lift-scheme">${lift.scheme}</span><span class="lift-pct">${lift.pct}</span></div>
-      <div class="sets-grid">
-        ${Array.from({length:sets},(_,si)=>{
-          const k=`${logKey}_s${si}`;
-          const logged=athleteLogs[k];
-          return `<div class="set-box ${logged?'done':''}" onclick="openSetModal('${lift.name}','${logKey}',${si})">
-            <div class="set-num">S${si+1}</div>
-            <div class="set-val">${logged?logged.w+'×'+logged.r:'—'}</div>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="lift-name">${lift.n}<span class="lift-scheme">${lift.s}</span><span class="lift-pct">${lift.p}</span></div>
+      <div class="sets-grid">${Array.from({length:nSets},(_,si)=>{
+        const k=`${lk}_s${si}`, log=aLog[k];
+        return `<div class="set-box ${log?"done":""}" onclick="openSetModal('${lift.n}','${lk}',${si})">
+          <div class="set-num">S${si+1}</div><div class="set-val">${log?log.w+"x"+log.r:"—"}</div>
+        </div>`;
+      }).join("")}</div>
     </div>`;
   });
 
   // Extra lifts
-  html+=`<div class="section-divider">Extra Lifts</div>`;
+  html+=`<div class="divider">Extra Lifts</div>`;
   for(let ex=0;ex<3;ex++){
-    const k=`day${s.day}_extra${ex}`;
-    const logged=(sessionLogs[activeAthlete]||{})[k];
+    const k=`d${day}_ex${ex}`,log=(sessLogs[activeAth]||{})[k];
     html+=`<div class="sprint-row">
-      <input class="sprint-input" style="width:110px;text-align:left;" placeholder="Exercise" id="en_${activeAthlete}_${k}" value="${logged?.name||''}" onchange="logExtra('${k}')">
-      <input class="sprint-input" placeholder="lbs×reps" id="ev_${activeAthlete}_${k}" value="${logged?.val||''}" onchange="logExtra('${k}')">
+      <input class="srinput" style="width:110px;text-align:left;" placeholder="Exercise" id="en_${activeAth}_${k}" value="${log?.name||""}" onchange="logExtra('${k}')">
+      <input class="srinput" placeholder="lbs x reps" id="ev_${activeAth}_${k}" value="${log?.val||""}" onchange="logExtra('${k}')">
     </div>`;
   }
 
-  // Sprint/Vertimax — shared between athletes (not per-athlete)
-  if(sd.hasSprint){
-    html+=`<div class="section-divider">🔥 Vertimax</div>`;
+  // Vertimax
+  if(sd.vmax&&sd.vmax.length>0){
+    html+=`<div class="divider">⚡ Vertimax Drills</div>`;
     sd.vmax.forEach((drill,di)=>{
-      const k=`shared_vmax${di}`;
-      const logged=sessionLogs._shared&&sessionLogs._shared[k];
-      html+=`<div class="vertimax-row">
-        <div class="vertimax-drill">${drill}</div>
-        <input class="vmax-input" placeholder="sets" id="vs_${k}" value="${logged?.sets||''}" onchange="logShared('${k}','sets',this.value)">
-        <input class="vmax-input" placeholder="reps" id="vr_${k}" value="${logged?.reps||''}" onchange="logShared('${k}','reps',this.value)">
-      </div>`;
-    });
-    html+=`<div class="section-divider">🏃 Sprint Times</div>`;
-    sd.sprints.forEach(dist=>{
-      const k=`shared_sprint_${dist}`;
-      const logged=sessionLogs._shared&&sessionLogs._shared[k];
-      html+=`<div class="sprint-row">
-        <div class="sprint-dist">${dist}</div>
-        <input class="sprint-input" placeholder="best time" id="sp_${k}" value="${logged||''}" onchange="logShared('${k}','val',this.value)">
-      </div>`;
-    });
-  } else {
-    html+=`<div class="section-divider">⚡ Sprint / Run Times</div>`;
-    sd.sprints.forEach(dist=>{
-      const k=`shared_sprint_${dist}`;
-      const logged=sessionLogs._shared&&sessionLogs._shared[k];
-      html+=`<div class="sprint-row">
-        <div class="sprint-dist">${dist}</div>
-        <input class="sprint-input" placeholder="time" value="${logged||''}" onchange="logShared('${k}','val',this.value)">
+      const k=`vmax${di}`,log=sessLogs._shared[k]||{};
+      html+=`<div class="vrow">
+        <div style="flex:1;font-size:13px;font-weight:500;">${drill}</div>
+        <input class="vinput" placeholder="sets" value="${log.sets||""}" onchange="logSh('${k}','sets',this.value)">
+        <input class="vinput" placeholder="reps" value="${log.reps||""}" onchange="logSh('${k}','reps',this.value)">
+        <input class="vinput" style="width:50px;" placeholder="band" value="${log.band||""}" onchange="logSh('${k}','band',this.value)">
       </div>`;
     });
   }
 
-  // Coach notes
-  html+=`<div class="section-divider">📝 Coach Notes</div>
-    <textarea class="notes-area" placeholder="Form cues, energy, injuries, PRs, anything worth noting…" onchange="sessionNotes=this.value">${sessionNotes}</textarea>`;
-
-  html+=`<div style="margin-top:20px">
-    <button onclick="saveSession()" style="width:100%;padding:18px;background:linear-gradient(135deg,#e8a838,#ff6b35);border:none;border-radius:14px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#0f1923;cursor:pointer;font-weight:700;">
-      ✓ SAVE SESSION
-    </button>
-  </div>`;
-
-  document.getElementById('session-content').innerHTML=html;
-}
-
-// ═══════════════════════════════════════════════════════════
-// LOGGING
-// ═══════════════════════════════════════════════════════════
-function openSetModal(liftName,logKey,setIdx){
-  const k=`${logKey}_s${setIdx}`;
-  const existing=(sessionLogs[activeAthlete]||{})[k];
-  currentSetModal={type:'set',logKey,setIdx,liftName,k};
-  document.getElementById('modal-title').textContent=liftName;
-  document.getElementById('modal-sub').textContent=`${activeAthlete} · Set ${setIdx+1}`;
-  document.getElementById('modal-label1').textContent='Weight (lbs)';
-  document.getElementById('modal-label2').textContent='Reps';
-  document.getElementById('modal-weight').type='number';
-  document.getElementById('modal-weight').value=existing?.w||'';
-  document.getElementById('modal-reps').value=existing?.r||'';
-  document.getElementById('modal').classList.add('show');
-  setTimeout(()=>document.getElementById('modal-weight').focus(),300);
-}
-
-function saveSet(){
-  const m=currentSetModal;
-  if(!m) return;
-  if(m.type==='set'){
-    const w=document.getElementById('modal-weight').value;
-    const r=document.getElementById('modal-reps').value;
-    if(!w&&!r){closeModalDirect();return;}
-    if(!sessionLogs[activeAthlete]) sessionLogs[activeAthlete]={};
-    sessionLogs[activeAthlete][m.k]={w:w||'BW',r:r||'—'};
-    checkPR(m.liftName,w,activeAthlete);
-    closeModalDirect();
-    renderSession();
-  } else if(m.type==='editRow'){
-    const w = document.getElementById('modal-weight').value;
-    const r = document.getElementById('modal-reps').value;
-    if(editSetTarget !== null){
-      const saved = getSavedSessions();
-      const row = saved[editSetTarget.sessionIdx].rows[editSetTarget.rowIdx];
-      if(w) row.weight = w;
-      if(r) row.reps = r;
-      try{ localStorage.setItem('hoh_sessions', JSON.stringify(saved)); }catch(e){}
-      closeModalDirect();
-      renderEditSession(editSetTarget.sessionIdx, saved[editSetTarget.sessionIdx]);
-      editSetTarget = null;
+  // Sprint section (Session A only — rep by rep)
+  if(sd.hasSprint){
+    const ph=PHASES["Xavier + Gabby"],wkN=curWeek(ph),wkD=ph.weeks[wkN-1],sw=wkD?.sprint;
+    html+=`<div class="divider">🏃 Sprint Workout</div>`;
+    if(sw){
+      html+=`<div class="prescription-box" style="background:rgba(233,30,140,0.08);border:1px solid rgba(233,30,140,0.25);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--pink);margin-bottom:4px;">WEEK ${wkN} PRESCRIPTION — ${wkD.theme}</div>
+        <div style="font-size:13px;font-weight:600;">${sw.dists.join(" + ")} · ${sw.reps} reps each</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Rest: ${sw.rest}</div>
+        <div style="font-size:11px;color:var(--accent);margin-top:2px;">Target: ${sw.target}</div>
+      </div>`;
     }
-    return;
-  } else if(m.type==='pr'){
-    const newVal=document.getElementById('modal-weight').value;
-    const dateNote=document.getElementById('modal-reps').value;
-    if(!newVal){closeModalDirect();return;}
-    const a=ATHLETES[m.athleteName];
-    const oldVal=a.prs[m.lift].val;
-    const today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'});
-    a.prs[m.lift].val=newVal;
-    a.prs[m.lift].date=dateNote||today;
-    a.history.unshift({date:a.prs[m.lift].date,lift:m.lift,val:`${newVal} ${a.prs[m.lift].unit}`,note:`Updated from ${oldVal}`});
-    syncPR(m.athleteName,m.lift,newVal,oldVal,a.prs[m.lift].unit);
-    showToast(`⭐ ${m.athleteName} PR updated — ${m.lift}: ${newVal}`);
-    closeModalDirect();
-    showAthleteDetail(m.athleteName);
+
+    sd.athletes.forEach(athName=>{
+      const a=ATH[athName];
+      const dists=sw?sw.dists:["100m","200m"];
+      const nReps=sw?sw.reps:3;
+      html+=`<div style="margin-bottom:16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:${a.color};margin-bottom:8px;">${athName}</div>`;
+      dists.forEach(dist=>{
+        html+=`<div style="margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">${dist}</div>
+          <div class="rep-grid">`;
+        for(let rep=0;rep<nReps;rep++){
+          const k=`spr_${athName}_${dist}_${rep}`,log=sessLogs._shared[k]||{};
+          html+=`<div class="rep-box">
+            <div style="font-size:9px;color:var(--muted);">REP ${rep+1}</div>
+            <input style="color:${a.color};" placeholder="0:00" value="${log.val||""}" onchange="logSh('${k}','val',this.value)">
+          </div>`;
+        }
+        html+=`</div></div>`;
+      });
+      // Custom distance row
+      const ck=`spr_${athName}_custom`,cl=sessLogs._shared[ck]||{};
+      html+=`<div class="sprint-row" style="margin-top:4px;">
+        <input class="srinput" style="width:100px;text-align:left;color:var(--muted);" placeholder="+ distance" id="cd_${athName}" value="${cl.dist||""}" onchange="logCustom('${athName}')">
+        <input class="srinput" style="color:${a.color};" placeholder="time" id="ct_${athName}" value="${cl.val||""}" onchange="logCustom('${athName}')">
+      </div></div>`;
+    });
+
+  } else if(sd.runDists&&sd.runDists.length>0){
+    // Non-sprint sessions — simple run time
+    html+=`<div class="divider">⏱ Run Times</div>`;
+    sd.runDists.forEach(dist=>{
+      const k=`run_${dist}`,log=sessLogs._shared[k]||{};
+      html+=`<div class="sprint-row">
+        <div style="flex:1;font-size:13px;font-weight:600;">${dist}</div>
+        <input class="srinput" placeholder="time" value="${log.val||""}" onchange="logSh('${k}','val',this.value)">
+      </div>`;
+    });
+  }
+
+  // Notes + save
+  html+=`<div class="divider">📝 Coach Notes</div>
+    <textarea class="notes-area" placeholder="Form cues, energy, injuries, anything worth noting…" onchange="sessNotes=this.value">${sessNotes}</textarea>
+    <div style="margin-top:20px;"><button class="save-btn" onclick="saveSess()">✓ SAVE SESSION</button></div>`;
+
+  document.getElementById("sess-content").innerHTML=html;
+}
+
+// ═══════════════════════════ MODAL ══════════════════════════
+function openSetModal(liftName,lk,si){
+  const k=`${lk}_s${si}`, ex=(sessLogs[activeAth]||{})[k];
+  curModal={type:"set",lk,si,liftName,k};
+  document.getElementById("m-title").textContent=liftName;
+  document.getElementById("m-sub").textContent=`${activeAth} · Set ${si+1}`;
+  document.getElementById("m-l1").textContent="Weight (lbs)";
+  document.getElementById("m-l2").textContent="Reps";
+  document.getElementById("m-w").type="number";
+  document.getElementById("m-w").value=ex?.w||"";
+  document.getElementById("m-r").value=ex?.r||"";
+  document.getElementById("modal").classList.add("show");
+  setTimeout(()=>document.getElementById("m-w").focus(),300);
+}
+
+function saveModal(){
+  const m=curModal; if(!m) return;
+  if(m.type==="set"){
+    const w=document.getElementById("m-w").value, r=document.getElementById("m-r").value;
+    if(!w&&!r){closeModal();return;}
+    if(!sessLogs[activeAth]) sessLogs[activeAth]={};
+    sessLogs[activeAth][m.k]={w:w||"BW",r:r||"—"};
+    checkPR(m.liftName,w,activeAth);
+    closeModal(); renderSess();
+  } else if(m.type==="editSet"){
+    const w=document.getElementById("m-w").value, r=document.getElementById("m-r").value;
+    if(editTarget!==null){
+      const saved=getSaved();
+      const row=saved[editTarget.si].rows[editTarget.ri];
+      if(w) row.weight=w; if(r) row.reps=r;
+      try{localStorage.setItem("hoh_sessions",JSON.stringify(saved));}catch(e){}
+      closeModal();
+      openEdit(editTarget.si); editTarget=null;
+    }
+  } else if(m.type==="pr"){
+    const newV=document.getElementById("m-w").value, dateV=document.getElementById("m-r").value;
+    if(!newV){closeModal();return;}
+    const a=ATH[m.name], old=a.prs[m.lift].v;
+    const today=new Date().toLocaleDateString("en-US",{month:"2-digit",day:"2-digit",year:"2-digit"});
+    a.prs[m.lift].v=TIMED.has(m.lift)?newV:parseFloat(newV)||newV;
+    a.prs[m.lift].d=dateV||today;
+    a.hist.unshift({d:a.prs[m.lift].d,l:m.lift,v:`${newV} ${a.prs[m.lift].u}`,n:`Updated from ${old}`});
+    syncPR(m.name,m.lift,newV,old,a.prs[m.lift].u);
+    toast(`⭐ ${m.name} — ${m.lift}: ${newV}`);
+    closeModal(); showAth(m.name);
   }
 }
 
-function checkPR(liftName,weight,athleteName){
-  const a=ATHLETES[athleteName];
-  if(!a.prs[liftName]) return;
-  const w=parseFloat(weight);
-  if(isNaN(w)) return;
-  const cur=parseFloat(a.prs[liftName].val);
+function checkPR(liftName,weight,name){
+  const a=ATH[name]; if(!a||!a.prs[liftName]) return;
+  const w=parseFloat(weight); if(isNaN(w)) return;
+  const cur=parseFloat(a.prs[liftName].v);
   if(w>cur){
-    const old=a.prs[liftName].val;
-    const today=new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'});
-    a.prs[liftName].val=w;
-    a.prs[liftName].date=today;
-    a.history.unshift({date:today,lift:liftName,val:`${w} lbs`,note:`Session PR (was ${old})`});
-    syncPR(athleteName,liftName,w,old,a.prs[liftName].unit);
-    showToast(`🔥 ${athleteName} PR — ${liftName}: ${w} lbs!`);
+    const old=a.prs[liftName].v;
+    const today=new Date().toLocaleDateString("en-US",{month:"2-digit",day:"2-digit",year:"2-digit"});
+    a.prs[liftName].v=w; a.prs[liftName].d=today;
+    a.hist.unshift({d:today,l:liftName,v:`${w} lbs`,n:`Session PR (was ${old})`});
+    syncPR(name,liftName,w,old,a.prs[liftName].u);
+    toast(`🔥 ${name} PR — ${liftName}: ${w} lbs!`);
   }
 }
 
-function logExtra(key){
-  const name=document.getElementById(`en_${activeAthlete}_${key}`)?.value;
-  const val=document.getElementById(`ev_${activeAthlete}_${key}`)?.value;
-  if(!sessionLogs[activeAthlete]) sessionLogs[activeAthlete]={};
-  sessionLogs[activeAthlete][key]={name,val};
+function closeModalOv(e){if(e.target.id==="modal") closeModal();}
+function closeModal(){document.getElementById("modal").classList.remove("show");curModal=null;}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.getElementById("modal").classList.contains("show")) saveModal();});
+
+// ═══════════════════════════ LOGGING ════════════════════════
+function logExtra(k){
+  const name=document.getElementById(`en_${activeAth}_${k}`)?.value;
+  const val=document.getElementById(`ev_${activeAth}_${k}`)?.value;
+  if(!sessLogs[activeAth]) sessLogs[activeAth]={};
+  sessLogs[activeAth][k]={name,val};
+}
+function logSh(k,field,val){if(!sessLogs._shared[k]) sessLogs._shared[k]={};sessLogs._shared[k][field]=val;}
+function logCustom(name){
+  const dist=document.getElementById(`cd_${name}`)?.value;
+  const time=document.getElementById(`ct_${name}`)?.value;
+  sessLogs._shared[`spr_${name}_custom`]={dist,val:time};
 }
 
-function logShared(key,field,val){
-  if(!sessionLogs._shared) sessionLogs._shared={};
-  if(!sessionLogs._shared[key]) sessionLogs._shared[key]={};
-  sessionLogs._shared[key][field]=val;
-}
-
-function closeModal(e){if(e.target.id==='modal') closeModalDirect();}
-function closeModalDirect(){document.getElementById('modal').classList.remove('show');currentSetModal=null;}
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('modal').classList.contains('show'))saveSet();});
-
-// ═══════════════════════════════════════════════════════════
-// SAVE SESSION
-// ═══════════════════════════════════════════════════════════
-function saveSession(){
-  const s=currentSession;
-  const sd=s.data;
-  const today=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  let totalSets=0;
-  const rows=[];
-
-  sd.athletes.forEach(athleteName=>{
-    const aLogs=sessionLogs[athleteName]||{};
-    Object.entries(aLogs).forEach(([k,v])=>{
+// ═══════════════════════════ SAVE SESSION ═══════════════════
+function saveSess(){
+  const {sd}=curSess;
+  const today=new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  let totalSets=0; const rows=[];
+  sd.athletes.forEach(name=>{
+    Object.entries(sessLogs[name]||{}).forEach(([k,v])=>{
       if(!v||(!v.w&&!v.r&&!v.name)) return;
       totalSets++;
-      // parse key: day1_2_s3 or day1_extra0
-      const parts=k.split('_');
-      const day=parts[0];
-      const liftIdx=parseInt(parts[1]);
-      const lifts=day==='day1'?sd.day1:sd.day2;
-      const liftName=lifts[liftIdx]?.name||parts[1];
-      const setNum=parts[2]?.replace('s','')||'';
-      rows.push({date:today,session:sd.label,athletes:sd.athletes.join('+'),athlete:athleteName,day,lift:liftName,set:setNum,weight:v.w||v.name||'',reps:v.r||v.val||'',notes:sessionNotes});
+      const parts=k.split("_"); const dayN=parts[0]; const liftIdx=parseInt(parts[1]);
+      const lifts=dayN==="d1"?sd.day1:sd.day2;
+      const liftName=lifts[liftIdx]?.n||parts[1];
+      const setNum=parts[2]?.replace("s","")||"";
+      rows.push({date:today,session:sd.label,athletes:sd.athletes.join("+"),athlete:name,day:dayN,lift:liftName,set:setNum,weight:v.w||v.name||"",reps:v.r||v.val||"",notes:sessNotes});
     });
   });
-
-  const sessionRecord={label:sd.label,date:today,athletes:sd.athletes.join(' + '),setsLogged:totalSets,notes:sessionNotes,synced:false,rows};
-  const saved=getSavedSessions();
-  saved.unshift(sessionRecord);
-  try{localStorage.setItem('hoh_sessions',JSON.stringify(saved.slice(0,50)));}catch(e){}
-
-  // Sync to sheets
-  syncSession(sessionRecord);
-
-  currentSession=null;
-  sessionLogs={};
-  navTo('screen-home');
-  setTimeout(()=>showToast('✓ Session Saved!'),200);
+  const rec={label:sd.label,date:today,athletes:sd.athletes.join(" + "),setsLogged:totalSets,notes:sessNotes,synced:false,rows};
+  const saved=getSaved(); saved.unshift(rec);
+  try{localStorage.setItem("hoh_sessions",JSON.stringify(saved.slice(0,50)));}catch(e){}
+  syncSession(rec);
+  curSess=null; sessLogs={}; go("s-home");
+  setTimeout(()=>toast("✓ Session Saved!"),200);
 }
 
-function confirmLeaveSession(){
-  const hasData=Object.values(sessionLogs).some(v=>typeof v==='object'&&Object.keys(v).length>0);
-  if(hasData&&!confirm('Leave session? Unsaved data will be lost.')) return;
-  currentSession=null; sessionLogs={}; navTo('screen-home');
+function leaveSession(){
+  const hasData=Object.values(sessLogs).some(v=>typeof v==="object"&&Object.keys(v).length>0);
+  if(hasData&&!confirm("Leave? Unsaved data will be lost.")) return;
+  curSess=null; sessLogs={}; go("s-home");
 }
 
-// ═══════════════════════════════════════════════════════════
-// GOOGLE SHEETS SYNC
-// ═══════════════════════════════════════════════════════════
-function setSyncStatus(status){
-  const dot=document.getElementById('sync-indicator');
-  if(!dot) return;
-  dot.className='sync-dot '+status;
+// ═══════════════════════════ EDIT SESSION ═══════════════════
+function openEdit(idx){
+  const saved=getSaved(), s=saved[idx];
+  if(!s){toast("Session not found");return;}
+  document.getElementById("edit-title").textContent=s.label;
+  document.getElementById("edit-date").textContent=s.date;
+  renderEdit(idx);
+  go("s-edit");
 }
+
+function renderEdit(idx){
+  const saved=getSaved(), s=saved[idx];
+  let html=`<div class="card" style="margin-bottom:14px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;">${s.label}</div>
+    <div style="font-size:12px;color:var(--muted);">${s.date} · ${s.athletes} · ${s.setsLogged} sets</div>
+  </div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">COACH NOTES</div>
+  <textarea class="notes-area" id="edit-notes-${idx}" style="margin-bottom:16px;">${s.notes||""}</textarea>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">LOGGED SETS</div>`;
+
+  if(s.rows&&s.rows.length>0){
+    const byAth={};
+    s.rows.forEach(r=>{if(!byAth[r.athlete]) byAth[r.athlete]=[];byAth[r.athlete].push(r);});
+    Object.entries(byAth).forEach(([name,rows])=>{
+      const a=ATH[name]||{color:"var(--accent)",bg:"rgba(232,168,56,0.1)"};
+      const byLift={};
+      rows.forEach(r=>{const k=r.day+"—"+r.lift;if(!byLift[k]) byLift[k]=[];byLift[k].push({...r,globalIdx:s.rows.indexOf(r)});});
+      html+=`<div style="background:${a.bg};border:1px solid ${a.color}30;border-radius:10px;padding:12px;margin-bottom:12px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${a.color};margin-bottom:10px;">${name}</div>`;
+      Object.entries(byLift).forEach(([lk,lrows])=>{
+        html+=`<div style="margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px;">${lk}</div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;">`;
+        lrows.forEach((r,si)=>{
+          html+=`<div style="background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.3);border-radius:8px;padding:6px 4px;text-align:center;cursor:pointer;" onclick="editSet(${idx},${r.globalIdx})">
+            <div style="font-size:9px;color:var(--muted);">S${si+1}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:2px;">${r.weight}x${r.reps}</div>
+          </div>`;
+        });
+        html+=`</div></div>`;
+      });
+      html+=`</div>`;
+    });
+  } else {
+    html+=`<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">No set data stored</div>`;
+  }
+
+  html+=`<div style="display:flex;gap:10px;margin-top:20px;">
+    <button onclick="saveEdit(${idx})" class="save-btn" style="flex:1;font-size:17px;">SAVE CHANGES</button>
+    <button onclick="delSess(${idx})" style="padding:16px 20px;background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:var(--red);cursor:pointer;">DEL</button>
+  </div>`;
+  document.getElementById("edit-content").innerHTML=html;
+}
+
+function editSet(sessIdx,rowIdx){
+  const s=getSaved()[sessIdx];
+  const row=s.rows[rowIdx];
+  editTarget={si:sessIdx,ri:rowIdx};
+  curModal={type:"editSet"};
+  document.getElementById("m-title").textContent=row.lift;
+  document.getElementById("m-sub").textContent=`${row.athlete} · Edit set`;
+  document.getElementById("m-l1").textContent="Weight (lbs)";
+  document.getElementById("m-l2").textContent="Reps";
+  document.getElementById("m-w").type="number";
+  document.getElementById("m-w").value=row.weight||"";
+  document.getElementById("m-r").value=row.reps||"";
+  document.getElementById("modal").classList.add("show");
+  setTimeout(()=>document.getElementById("m-w").focus(),300);
+}
+
+function saveEdit(idx){
+  const saved=getSaved();
+  const notes=document.getElementById(`edit-notes-${idx}`)?.value||"";
+  saved[idx].notes=notes;
+  try{localStorage.setItem("hoh_sessions",JSON.stringify(saved));}catch(e){}
+  syncSession(saved[idx]);
+  toast("✓ Session updated");
+  go("s-home");
+}
+
+function delSess(idx){
+  if(!confirm("Delete this session?")) return;
+  const saved=getSaved(); saved.splice(idx,1);
+  try{localStorage.setItem("hoh_sessions",JSON.stringify(saved));}catch(e){}
+  toast("Session deleted"); go("s-home");
+}
+
+function clearAll(){
+  if(!confirm("Delete ALL sessions? Cannot be undone.")) return;
+  localStorage.removeItem("hoh_sessions");
+  toast("All sessions cleared"); renderHome(); renderSettings();
+}
+
+// ═══════════════════════════ SYNC ═══════════════════════════
+function setSyncDot(s){const d=document.getElementById("sync-dot");if(d) d.className="sync-dot "+s;}
 
 async function syncToSheets(payload){
   if(!sheetsURL) return false;
-  setSyncStatus('syncing');
-  try {
-    // Fire-and-forget POST — no-cors means we can't read response but data reaches Apps Script
-    fetch(sheetsURL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'text/plain'},
-      body: JSON.stringify(payload)
-    });
-    // Give it a moment then mark synced
-    await new Promise(r => setTimeout(r, 1500));
-    setSyncStatus('synced');
-    return true;
-  } catch(e) {
-    setSyncStatus('error');
-    return false;
-  }
+  setSyncDot("syncing");
+  try{
+    fetch(sheetsURL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)});
+    await new Promise(r=>setTimeout(r,1500));
+    setSyncDot("synced"); return true;
+  }catch(e){setSyncDot("error");return false;}
 }
 
-
-async function syncSession(record){
-  const ok=await syncToSheets({type:'session',rows:record.rows});
-  if(ok){
-    const saved=getSavedSessions();
-    const idx=saved.findIndex(s=>s.date===record.date&&s.label===record.label);
-    if(idx>=0){saved[idx].synced=true;try{localStorage.setItem('hoh_sessions',JSON.stringify(saved));}catch(e){}}
-  }
+async function syncSession(rec){
+  const ok=await syncToSheets({type:"session",rows:rec.rows||[]});
+  if(ok){const s=getSaved();const i=s.findIndex(x=>x.date===rec.date&&x.label===rec.label);if(i>=0){s[i].synced=true;try{localStorage.setItem("hoh_sessions",JSON.stringify(s));}catch(e){}}}
 }
-
-async function syncPR(athlete,lift,newVal,oldVal,unit){
-  await syncToSheets({type:'pr',date:new Date().toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit'}),athlete,lift,newVal,oldVal,unit,notes:''});
-}
+async function syncPR(name,lift,newV,old,unit){await syncToSheets({type:"pr",date:new Date().toLocaleDateString("en-US",{month:"2-digit",day:"2-digit",year:"2-digit"}),athlete:name,lift,newVal:newV,oldVal:old,unit,notes:""});}
 
 async function forceSyncAll(){
-  const saved=getSavedSessions().filter(s=>!s.synced&&s.rows);
-  if(!saved.length){alert('Nothing to sync — all sessions already synced.');return;}
-  showToast(`Syncing ${saved.length} sessions…`);
-  let count=0;
-  for(const s of saved){
-    const ok=await syncToSheets({type:'session',rows:s.rows||[]});
-    if(ok) count++;
-  }
-  showToast(`✓ Synced ${count} of ${saved.length} sessions`);
-  renderSettings();
+  const s=getSaved().filter(x=>!x.synced&&x.rows);
+  if(!s.length){alert("Nothing to sync.");return;}
+  toast(`Syncing ${s.length} sessions…`);
+  let c=0; for(const x of s){const ok=await syncToSheets({type:"session",rows:x.rows||[]});if(ok) c++;}
+  toast(`✓ Synced ${c} sessions`);
 }
 
-// ═══════════════════════════════════════════════════════════
-// SETTINGS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════ SETTINGS ═══════════════════════
 function renderSettings(){
-  document.getElementById('sheets-url').value=sheetsURL||'';
-  const saved=getSavedSessions();
-  document.getElementById('local-count').textContent=saved.length;
-  const statusEl=document.getElementById('sync-status-text');
-  if(!sheetsURL){statusEl.textContent='Not configured';statusEl.style.color='var(--muted)';}
-  else{statusEl.textContent='URL configured — test by saving a session';statusEl.style.color='var(--green)';}
-  document.getElementById('script-code-display').textContent=APPS_SCRIPT;
+  document.getElementById("sheets-url").value=sheetsURL||"";
+  document.getElementById("local-count").textContent=getSaved().length;
+  document.getElementById("script-display").textContent=APPS_SCRIPT_CODE;
+  const st=document.getElementById("sync-status-text");
+  if(sheetsURL){st.textContent="URL configured ✓";st.style.color="var(--green)";}
+  else{st.textContent="Not configured";st.style.color="var(--muted)";}
 }
 
 async function saveSheetURL(){
-  const url=document.getElementById('sheets-url').value.trim();
-  if(!url){alert('Please enter a URL.');return;}
-  sheetsURL=url;
-  localStorage.setItem('hoh_sheets_url',url);
-  showToast('Saving & testing…');
-  // Ping the script with a test payload
-  const ok = await syncToSheets({type:'ping',message:'HoH connection test'});
-  if(ok){
-    showToast('✓ URL saved — check your sheet for a ping row!');
-    setSyncStatus('synced');
-  } else {
-    showToast('⚠ Could not reach — check URL');
-    setSyncStatus('error');
-  }
+  const url=document.getElementById("sheets-url").value.trim();
+  if(!url){alert("Please enter a URL.");return;}
+  sheetsURL=url; localStorage.setItem("hoh_url",url);
+  toast("Testing connection…");
+  const ok=await syncToSheets({type:"ping"});
+  toast(ok?"✓ Connected! Check Sheets for ping row.":"⚠ Could not connect — check URL");
   renderSettings();
 }
+function clearSheetURL(){if(!confirm("Remove URL?")) return;sheetsURL="";localStorage.removeItem("hoh_url");renderSettings();toast("URL cleared");}
+function copyScript(){navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(()=>toast("✓ Script copied!")).catch(()=>{const el=document.getElementById("script-display");const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand("copy");toast("✓ Script copied!");});}
 
-function clearSheetURL(){
-  if(!confirm('Remove Google Sheets URL?')) return;
-  sheetsURL='';
-  localStorage.removeItem('hoh_sheets_url');
-  renderSettings();
-  showToast('URL cleared');
-}
-
-function copyScript(){
-  navigator.clipboard.writeText(APPS_SCRIPT).then(()=>showToast('✓ Script copied!')).catch(()=>{
-    const el=document.getElementById('script-code-display');
-    const range=document.createRange();range.selectNode(el);
-    window.getSelection().removeAllRanges();window.getSelection().addRange(range);
-    document.execCommand('copy');
-    showToast('✓ Script copied!');
-  });
-}
-
-function editSession(idx){
-  const saved = getSavedSessions();
-  const s = saved[idx];
-  if(!s){ showToast('Session not found'); return; }
-  document.getElementById('edit-session-title').textContent = s.label;
-  document.getElementById('edit-session-date').textContent = s.date;
-  renderEditSession(idx, s);
-  navTo('screen-edit-session');
-}
-
-function renderEditSession(idx, s){
-  const saved = getSavedSessions();
-  const session = saved[idx];
-  let html = '';
-
-  // Session info header
-  html += `<div class="card" style="margin-bottom:14px;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;margin-bottom:4px;">${session.label}</div>
-    <div style="font-size:12px;color:var(--muted);">${session.date} · ${session.athletes} · ${session.setsLogged} sets logged</div>
-  </div>`;
-
-  // Edit notes
-  html += `<div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">COACH NOTES</div>
-  <textarea class="notes-area" id="edit-notes-${idx}" style="margin-bottom:16px;">${session.notes||''}</textarea>`;
-
-  // Show logged sets grouped by athlete
-  html += `<div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;">LOGGED SETS</div>`;
-
-  if(session.rows && session.rows.length > 0){
-    // Group by athlete
-    const byAthlete = {};
-    session.rows.forEach(r => {
-      if(!byAthlete[r.athlete]) byAthlete[r.athlete] = [];
-      byAthlete[r.athlete].push(r);
-    });
-
-    Object.entries(byAthlete).forEach(([athlete, rows]) => {
-      const a = ATHLETES[athlete] || {color:'var(--accent)',bg:'rgba(232,168,56,0.1)'};
-      html += `<div style="background:${a.bg};border:1px solid ${a.color}30;border-radius:10px;padding:12px;margin-bottom:12px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:${a.color};margin-bottom:10px;">${athlete}</div>`;
-
-      // Group by lift
-      const byLift = {};
-      rows.forEach(r => {
-        const key = r.day + ' — ' + r.lift;
-        if(!byLift[key]) byLift[key] = [];
-        byLift[key].push(r);
-      });
-
-      Object.entries(byLift).forEach(([liftKey, liftRows]) => {
-        html += `<div style="margin-bottom:10px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">${liftKey}</div>
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;">`;
-        liftRows.forEach((r, si) => {
-          const rowIdx = session.rows.indexOf(r);
-          html += `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(46,204,113,0.3);border-radius:8px;padding:6px 4px;text-align:center;cursor:pointer;" onclick="editSetInSession(${idx},${rowIdx})">
-            <div style="font-size:9px;color:var(--muted);">S${si+1}</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:2px;">${r.weight}×${r.reps}</div>
-          </div>`;
-        });
-        html += `</div></div>`;
-      });
-      html += `</div>`;
-    });
-  } else {
-    html += `<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;">No set data stored for this session</div>`;
-  }
-
-  // Save and delete buttons
-  html += `<div style="display:flex;gap:10px;margin-top:20px;">
-    <button onclick="saveEditedSession(${idx})" style="flex:1;padding:16px;background:linear-gradient(135deg,#e8a838,#ff6b35);border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#0f1923;cursor:pointer;">SAVE CHANGES</button>
-    <button onclick="deleteSession(${idx})" style="padding:16px 20px;background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#e74c3c;cursor:pointer;">DELETE</button>
-  </div>`;
-
-  document.getElementById('edit-session-content').innerHTML = html;
-}
-
-let editSetTarget = null;
-
-function editSetInSession(sessionIdx, rowIdx){
-  const saved = getSavedSessions();
-  const row = saved[sessionIdx].rows[rowIdx];
-  editSetTarget = {sessionIdx, rowIdx};
-  currentSetModal = {type:'editRow'};
-  document.getElementById('modal-title').textContent = row.lift;
-  document.getElementById('modal-sub').textContent = `${row.athlete} · Edit set`;
-  document.getElementById('modal-label1').textContent = 'Weight (lbs)';
-  document.getElementById('modal-label2').textContent = 'Reps';
-  document.getElementById('modal-weight').type = 'number';
-  document.getElementById('modal-weight').value = row.weight || '';
-  document.getElementById('modal-reps').value = row.reps || '';
-  document.getElementById('modal').classList.add('show');
-  setTimeout(()=>document.getElementById('modal-weight').focus(), 300);
-}
-
-function saveEditedSession(idx){
-  const saved = getSavedSessions();
-  const notes = document.getElementById(`edit-notes-${idx}`)?.value || '';
-  saved[idx].notes = notes;
-  try{ localStorage.setItem('hoh_sessions', JSON.stringify(saved)); }catch(e){}
-  // Re-sync the updated session
-  syncSession(saved[idx]);
-  showToast('✓ Session updated');
-  navTo('screen-home');
-}
-
-function deleteSession(idx){
-  if(!confirm('Delete this session? This only removes it from this device.')) return;
-  const saved=getSavedSessions();
-  saved.splice(idx,1);
-  try{localStorage.setItem('hoh_sessions',JSON.stringify(saved));}catch(e){}
-  showToast('Session deleted');
-  renderHome();
-}
-
-function clearAllSessions(){
-  if(!confirm('Delete ALL sessions from this device? This cannot be undone.')) return;
-  localStorage.removeItem('hoh_sessions');
-  showToast('All sessions cleared');
-  renderHome();
-  renderSettings();
-}
-
-function getSavedSessions(){try{return JSON.parse(localStorage.getItem('hoh_sessions')||'[]');}catch(e){return[];}}
-function showToast(msg){const t=document.getElementById('pr-toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+// ═══════════════════════════ UTILS ══════════════════════════
+function getSaved(){try{return JSON.parse(localStorage.getItem("hoh_sessions")||"[]");}catch(e){return[];}}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
 
 // INIT
 renderHome();
-if(sheetsURL) setSyncStatus('synced');
+if(sheetsURL) setSyncDot("synced");
 </script>
 </body>
 </html>
